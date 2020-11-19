@@ -1,0 +1,34 @@
+==> find all pair gcd in n to m
+==> for(i=1; i<=N; i++)
+ for(j=1; j<=M; j++)  res+=gcd(i,j);
+==> using mobious function
+
+int ans=1;
+void proc(int n,int m,int p)
+{
+	long long k=0;
+	while(n && m)
+	{
+		n/=p;
+		m/=p;
+		k+=(long long)n*m;
+	}
+	ans=(long long)ans*BigMod(p,k,M)%M;
+}
+
+bool p[15000001];
+
+int main()
+{
+	int n,m,i,j;
+	scanf("%d%d",&n,&m);
+	for(i=2;i*i<=m && i*i<=n;i++)
+		if(!p[i])
+			for(j=i*i;j<=m && j<=n;j+=i)
+				p[j]=1;
+	for(i=2;i<=m && i<=n;i++)
+		if(!p[i])
+			proc(n,m,i);
+	printf("%d\n",ans);
+	return 0;
+}

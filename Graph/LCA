@@ -1,0 +1,38 @@
+vll g[N];
+ll dep[N],par[N][20];
+void dfs(ll u,ll pre)
+{
+    dep[u]=dep[pre]+1;
+    par[u][0]=pre;
+    for(auto v:g[u])
+    {
+        if(v==pre)
+            continue;
+        dfs(v,u);
+    }
+}
+void init()
+{
+    for(k=1; k<20; k++)
+        for(i=1; i<=n; i++)
+            par[i][k]=par[par[i][k-1]][k-1];
+}
+ll lca(ll u,ll v)
+{
+    if(dep[u]<dep[v])
+        swap(u,v);
+    for(ll k=19; k>=0; k--)
+        if(dep[par[u][k]]>=dep[v])
+            u=par[u][k];
+    if(u==v)
+        return u;
+    for(ll k=19; k>=0; k--)
+        if(par[u][k]!=par[v][k])
+            u=par[u][k],v=par[v][k];
+    return par[u][0];
+}
+ll dist(ll u,ll v)
+{
+    return dep[u]+dep[v]-2*dep[lca(u,v)];
+}
+

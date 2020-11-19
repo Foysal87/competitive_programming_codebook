@@ -1,0 +1,42 @@
+map<int,int>mp;
+vector<int>primes;
+void seive()
+void factorilaization(long long int x)
+int main()
+{
+    seive();
+    long long int n;
+    while(cin>>n)
+    {
+        factorilaization(n);
+        int divisors=1;
+        long long sum_divisors=1;
+        long long mult_divisors;
+        int flag=0;
+        for(map<int,int>::iterator it=mp.begin();it!=mp.end();it++)
+        {
+            if(it->first==n) flag=1;
+            if(!flag)
+            sum_divisors*=((pow(it->first,it->second+1)-1)/(it->first-1));
+            divisors*=(it->second+1);
+            cout<<it->first<<" ===>>  "<<it->second<<endl;
+        }
+        if(flag) sum_divisors=1+n;
+        if(divisors%2==0)
+        {
+            int k=divisors/2;
+            cout<<k<<endl;
+            mult_divisors=pow(n,k);
+        }
+        else
+        {
+            n=(int) sqrt(n);
+            cout<<n<<endl;
+            mult_divisors=pow(n,divisors);
+        }
+    cout<<"divisors    =====>>>>    "<<divisors<<endl;
+    cout<<"sum of divisors   =====>>>>   "<<sum_divisors<<endl;
+    cout<<"mult of divisors    ====>>>>>>>>>   "<< mult_divisors <<endl;
+    }
+    return 0;
+}

@@ -1,0 +1,24 @@
+/* Find Maximum clique in a graph.
+ Edges are stored using bit. BronKerbosch(0,(1LL<<node) - 1 ,0)
+  */
+//clique= complete subgraph(every node connected with other vertices)
+long long n, edges[50], fans ;
+void BronKerbosch(long long r,long long p,long long x)
+{
+    if(p == 0 && x == 0)
+    {
+        fans = max(fans,(long long)__builtin_popcountll(r));
+        return ;
+    }
+    int u = 0 ;
+    while(!((1LL<<u) & (p|x)))    u++;
+    for(int v=0; v<n;v++)
+    {
+        if(((1LL<<v)&p) && !((1LL<<v) & edges[u]))
+        {
+            BronKerbosch(r|(1LL<<v),p&edges[v],x&edges[v]);
+            p -= (1LL<<v) ;
+            x |= (1LL<<v) ;
+        }
+    }
+}

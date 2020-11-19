@@ -1,0 +1,68 @@
+/// faster then normal
+/// for less query this algorithm so fast
+struct node
+{
+	int l,r,idx;
+ int64_t ord;
+}q[N];
+int a[N],curl,curr,cnt[N*5];
+ll ans,sol[N];
+inline int64_t gilbertOrder(int x, int y, int pow, int rotate) {
+if (pow == 0) {
+return 0;
+}
+int hpow = 1 << (pow-1);
+int seg = (x < hpow) ? (
+(y < hpow) ? 0 : 3
+) : (
+(y < hpow) ? 1 : 2
+);
+seg = (seg + rotate) & 3;
+const int rotateDelta[4] = {3, 0, 0, 1};
+int nx = x & (x ^ hpow), ny = y & (y ^ hpow);
+int nrot = (rotate + rotateDelta[seg]) & 3;
+int64_t subSquareSize = int64_t(1) << (2*pow - 2);
+int64_t ans = seg * subSquareSize;
+int64_t add = gilbertOrder(nx, ny, pow-1, nrot);
+ans += (seg == 1 || seg == 2) ? add : (subSquareSize - add -
+1);
+return ans;
+}
+bool cmp(node a,node b)
+{
+ return a.ord<b.ord;
+}
+inline void add(int x)//careful x is the number not the index
+{
+ ans-=1LL*cnt[x]*cnt[x]*x;
+ cnt[x]++;
+ ans+=1LL*cnt[x]*cnt[x]*x;
+}
+inline void remov(int x)
+{
+ ans-=1LL*cnt[x]*cnt[x]*x;
+ cnt[x]--;
+ ans+=1LL*cnt[x]*cnt[x]*x;
+}
+int main()
+{
+ __;
+ int i,j,k,n,m,t;
+ cin>>n>>t;
+ for(i=1;i<=n;i++) cin>>a[i];
+ for(i=0;i<t;i++){
+ cin>>q[i].l>>q[i].r;
+ q[i].idx=i;
+ }
+ for(i=0;i<t;i++) q[i].ord=gilbertOrder(q[i].l,q[i].r,21,0);
+ sort(q,q+t,cmp);
+ for(i=0;i<t;i++){
+ while(curl<q[i].l) remov(a[curl++]);
+ while(curl>q[i].l) add(a[--curl]);
+ while(curr<q[i].r) add(a[++curr]);
+ while(curr>q[i].r) remov(a[curr--]);
+ sol[q[i].idx]=ans;
+ }
+ for(i=0;i<t;i++) cout<<sol[i]<<nl;
+ return 0;
+}

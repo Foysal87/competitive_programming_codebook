@@ -1,0 +1,59 @@
+/// logn query time
+
+struct pt {
+	int x, y;
+};
+struct ang {
+	int a, b;
+};
+bool operator <(const ang & p, const ang & q) {
+	if (pb == 0 && qb == 0)
+		return pa <qa;
+	return pa * 1ll * qb <pb * 1ll * qa;
+}
+long long sq (pt & a, pt & b, pt & c) {
+	return ax * 1ll * (by-cy) + bx * 1ll * (cy-ay) + cx * 1ll * (ay-by);
+}
+int main () {
+	int n;
+	cin >> n;
+	vector <pt> p (n);
+	int zero_id = 0;
+	for (int i = 0; i <n; ++ i) {
+		scanf ("% d% d", & p [i] .x, & p [i] .y);
+		if (p [i] .x <p [zero_id] .x || p [i] .x == p [zero_id] .x && p [i] .y <p [zero_id] .y)
+			zero_id = i;
+	}
+	pt zero = p [zero_id];
+	rotate (p.begin (), p.begin () + zero_id, p.end ());
+	p.erase (p.begin ());
+	--n;
+	vector <ang> a (n);
+	for (int i = 0; i <n; ++ i) {
+		a [i] .a = p [i] .y - zero.y;
+		a [i] .b = p [i] .x - zero.x;
+		if (a [i] .a == 0)
+			a [i] .b = a [i] .b <0? -eleven;
+	}
+	for (;;) {
+		pt q; // next request
+		bool in = false;
+		if (qx> = zero.x)
+			if (qx == zero.x && qy == zero.y)
+				in = true;
+			else {
+				ang my = {qy-zero.y, qx-zero.x};
+				if (my.a == 0)
+					my.b = my.b <0? -eleven;
+				vector <ang> :: iterator it = upper_bound (a.begin (), a.end (), my);
+				if (it == a.end () && my.a == a [n-1] .a && my.b == a [n-1] .b)
+					it = a.end () - 1;
+				if (it! = a.end () && it! = a.begin ()) {
+					int p1 = int (it - a.begin ());
+					if (sq (p [p1], p [p1-1], q) <= 0)
+						in = true;
+				}
+			}
+		puts (in? "INSIDE": "OUTSIDE");
+	}
+

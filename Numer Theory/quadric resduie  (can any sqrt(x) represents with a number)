@@ -1,0 +1,185 @@
+template<typename T, typename U>
+std::ostream& operator<<(std::ostream& stream, const std::pair<T, U>& p) {
+    std::cout << "(" << p.first << ", " << p.second << ")";
+}
+
+/// Outputs a vector to a stream.
+template<typename T>
+std::ostream& operator<<(std::ostream& stream, const std::vector<T>& container) {
+    if (container.size() == 0) {
+        return stream << "{}";
+    } else {
+        auto it = container.begin();
+        stream << '{' << *it++;
+        while (it != container.end()) {
+            stream << ", " << *it++;
+        }
+        return stream << '}';
+    }
+}
+
+/// Outputs a set to a stream.
+template<typename T>
+std::ostream& operator<<(std::ostream& stream, const std::set<T>& container) {
+    if (container.size() == 0) {
+        return stream << "{}";
+    } else {
+        auto it = container.begin();
+        stream << '{' << *it++;
+        while (it != container.end()) {
+            stream << ", " << *it++;
+        }
+        return stream << '}';
+    }
+}
+
+/// Determines if n is a power of 2
+bool is_power_of_two(int64_t n) {
+    return (n & (n - 1)) == 0;
+}
+
+/// Computes a^b in log(b) time.
+/// Assumes b is non-negative.
+int64_t ipow(int64_t a, int64_t b) {
+    if (b == 0) return 1;
+    else if (b & 1) return a*ipow(a, b - 1);
+    else return ipow(a*a, b >> 1);
+}
+
+///Computes GCD(a, b)
+int64_t gcd(int64_t a, int64_t b) {
+    while (b) {
+        int64_t t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+/// Computes a*b (mod m) safely.
+/// This will be needed if you want to do
+/// computations with moduli greater than 2^30 - 1.
+int64_t mod_mul(int64_t a, int64_t b, int64_t m) {
+    int64_t result = 0;
+    a %= m;
+    b %= m;
+    while (b) {
+        if (b & 1) {
+            result = (result + a) % m;
+        }
+        a = (a + a) % m;
+        b >>= 1;
+    }
+    return result;
+}
+
+/// Computes a^b (mod m)
+int64_t mod_pow(int64_t a, int64_t b, int64_t m) {
+    int64_t result = 1;
+    a %= m;
+    while (b) {
+        if (b & 1) {
+            result = (result * a) % m;//mod_mul(result, a, m);
+        }
+        a = (a*a) % m;//mod_mul(a, a, m);
+        b >>= 1;
+    }
+    return result;
+}
+
+/// Extended GCD Algorithm
+std::tuple<int64_t, int64_t, int64_t> extended_gcd(int64_t a, int64_t b) {
+    if (a == 0) {
+        return std::make_tuple(b, 0ll, 1ll);
+    } else {
+        auto t = extended_gcd(b % a, a);
+        auto g = std::get<0>(t);
+        auto y = std::get<1>(t);
+        auto x = std::get<2>(t);
+        return std::make_tuple(g, x - (b/a)*y, y);
+    }
+}
+
+/// Computes a^(-1) (mod n)
+int64_t mod_inv(int64_t a, int64_t n) {
+    auto result = extended_gcd(a, n);
+    if (std::get<0>(result) == 1) {
+        return (n + std::get<1>(result)) % n;
+    } else {
+        throw std::runtime_error("mod_inv args not coprime.");
+    }
+}
+
+/// Computes the Legendre Symbol
+/// returns 1 if sqrt(a) can reperesent with a number
+/// return mod-1 if it can't be repersent with a number
+int64_t legendre_symbol(int64_t a, int64_t p) {
+    return mod_pow(a, (p - 1)/2, p);
+}
+
+/// Determines if a is a quadratic residue modulo p
+int64_t is_quadratic_residue(int64_t a, int64_t p) {
+    return legendre_symbol(a, p) == 1;
+}
+
+/// Computes the square root of n modulo p
+/// using the Tonelli-Shanks algorithm.
+std::vector<int64_t> tonelli_shanks(int64_t n, int64_t p) {
+    if (!is_quadratic_residue(n, p)) {
+        return {};
+    }
+
+    int64_t q = p - 1;
+    int64_t s = 0;
+    while (~q & 1) {
+    	q >>= 1;
+    	s += 1;
+    }
+
+    /// p = 3 (mod 4)
+    /// Hence, the solutions are trivial.
+    if (s == 1) {
+    	auto x = mod_pow(n, (p + 1)/4, p);
+    	return {x, p - x};
+    }
+
+    /// Select a quadratic non-residue (mod p)
+    /// This runs in expected logarithmic time
+    /// given Lagrange's theorem on the number of
+    /// quadratic residues modulo p.
+    int64_t z = 0;
+    for (int64_t k = 1; k < p; ++k) {
+        if (!is_quadratic_residue(k, p)) {
+            z = k;
+            break;
+        }
+    }
+
+    int64_t c = mod_pow(z, q, p);
+    int64_t r = mod_pow(n, (q + 1)/2, p);
+    int64_t t = mod_pow(n, q, p);
+    int64_t m = s;
+
+    while (t != 1) {
+        int i = 1;
+        int64_t x = (t*t) % p;
+        while (x != 1) {
+            x = (x*x) % p;
+            i += 1;
+        }
+        int64_t b = mod_pow(c, (1ll << (m - i - 1)), p);
+        /// You could use mod_mul to ensure safety when
+        /// handling very large numbers.
+        r = (r*b) % p;
+        c = (b*b) % p;
+        t = (t*c) % p;
+        m = i;
+    }
+
+    return {r, p - r};
+}
+
+int main()
+{
+    std::cout << tonelli_shanks(5, 1000000009) << std::endl;
+}

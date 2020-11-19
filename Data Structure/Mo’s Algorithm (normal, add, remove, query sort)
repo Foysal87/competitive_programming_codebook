@@ -1,0 +1,46 @@
+/// complexity (n+q)*sqrt(n)
+struct node
+{
+	int l,r,idx;
+}q[mxn];
+int block,a[mxn],curl,curr,cnt[mxn*5];
+ll ans,sol[mxn];
+bool cmp(node a,node b)
+{
+	if(a.l/block==b.l/block) return a.r<b.r;
+	else return a.l/block<b.l/block;
+}
+inline void add(int x)//careful x is the number not the index
+{
+	ans-=1LL*cnt[x]*cnt[x]*x;
+	cnt[x]++;
+	ans+=1LL*cnt[x]*cnt[x]*x;
+}
+inline void remov(int x)
+{
+	ans-=1LL*cnt[x]*cnt[x]*x;
+	cnt[x]--;
+	ans+=1LL*cnt[x]*cnt[x]*x;
+}
+int main()
+{
+	__;
+	int i,j,k,n,m,t;
+	cin>>n>>t;
+	for(i=1;i<=n;i++) cin>>a[i];
+		for(i=0;i<t;i++){
+			cin>>q[i].l>>q[i].r;
+			q[i].idx=i;
+		}
+		block=(int)sqrt(n);
+		sort(q,q+t,cmp);
+		for(i=0;i<t;i++){
+			while(curl<q[i].l) remov(a[curl++]);
+			while(curl>q[i].l) add(a[--curl]);
+			while(curr<q[i].r) add(a[++curr]);
+			while(curr>q[i].r) remov(a[curr--]);
+			sol[q[i].idx]=ans;
+		}
+		for(i=0;i<t;i++) cout<<sol[i]<<nl;
+			return 0;
+}

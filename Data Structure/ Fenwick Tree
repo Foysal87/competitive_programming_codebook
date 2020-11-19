@@ -1,0 +1,39 @@
+/// modify change the value of x index by v
+/// get gives us the sum of (0 to x)th index
+template <typename T>
+class fenwick {
+ public:
+  vector<T> fenw;
+  int n;
+
+  fenwick(int _n) : n(_n) {
+    fenw.resize(n);
+  }
+
+  void modify(int x, T v) {
+    while (x < n) {
+      fenw[x] += v;
+      x |= (x + 1);
+    }
+  }
+
+  T get(int x) {
+    T v{};
+    while (x >= 0) {
+      v += fenw[x];
+      x = (x & (x + 1)) - 1;
+    }
+    return v;
+  }
+};
+
+int main() {
+
+  int n;
+  cin >> n;
+  vector<long long> s(n);
+    fenwick<long long> fenw(n);
+  for (int i = 0; i < n; i++) {
+    cin >> s[i];
+    fenw.modify(i,s[i]);
+  }

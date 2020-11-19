@@ -1,0 +1,45 @@
+/*
+You are given many pairs (main goal is to solve it for t pairs) of integers (a1,n1), (a2,n2)….(a^k,n^k). There is no assumption that n1 and n2 are coprime.
+Find an integer x that satisfies
+x%n1=a1
+x%n2=a2
+..
+x%(n^k)=a^k
+
+*/
+
+const int N = 20;
+long long GCD(long long a, long long b) { return (b == 0) ? a : GCD(b, a % b); }
+inline long long LCM(long long a, long long b) { return a / GCD(a, b) * b; }
+inline long long normalize(long long x, long long mod) { x %= mod; if (x < 0) x += mod; return x; }
+struct GCD_type { long long x, y, d; };
+GCD_type ex_GCD(long long a, long long b)
+{
+    if (b == 0) return {1, 0, a};
+    GCD_type pom = ex_GCD(b, a % b);
+    return {pom.y, pom.x - a / b * pom.y, pom.d};
+}
+int testCases;
+int t;
+long long a[N], n[N], ans, lcm;
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cin >> t;
+    for(int i = 1; i <= t; i++) cin >> a[i] >> n[i], normalize(a[i], n[i]);
+    ans = a[1];
+    lcm = n[1];
+    for(int i = 2; i <= t; i++)
+    {
+        auto pom = ex_GCD(lcm, n[i]);
+        int x1 = pom.x;
+        int d = pom.d;
+        if((a[i] - ans) % d != 0) return cerr << "No solutions" << endl, 0;
+        ans = normalize(ans + x1 * (a[i] - ans) / d % (n[i] / d) * lcm, lcm * n[i] / d);
+        lcm = LCM(lcm, n[i]); // you can save time by replacing above lcm * n[i] /d by lcm = lcm * n[i] / d
+    }
+    cout << ans<< endl;
+
+    return 0;
+}

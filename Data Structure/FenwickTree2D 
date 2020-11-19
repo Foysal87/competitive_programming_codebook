@@ -1,0 +1,61 @@
+/// 0 base indexing
+struct FenwickTree2D {
+    vector<vector<int>> bit;
+    vector<int>g;
+    int n, m;
+    void init(int n,int m) {
+        this->n = n;
+        this->m=m;
+        for(int i=0;i<n;i++)
+        {
+            g.assign(m,0);
+            bit.pb(g);
+        }
+    }
+    FenwickTree2D(int n,int m,vector<vector<int>>a) {
+        init(n,m);
+        for (size_t i = 0; i<a.size(); i++)
+           for(size_t j=0;j<a[i].size();j++)
+            add(i,j, a[i][j]);
+    }
+    int sum(int x, int y) {
+        int ret = 0;
+        for (int i = x; i >= 0; i = (i & (i + 1)) - 1)
+            for (int j = y; j >= 0; j = (j & (j + 1)) - 1)
+                ret += bit[i][j];
+        return ret;
+    }
+
+    void add(int x, int y, int delta) {
+        for (int i = x; i < n; i = i | (i + 1))
+            for (int j = y; j < m; j = j | (j + 1))
+                bit[i][j] += delta;
+    }
+};
+vector<vi>v;
+int main()
+{
+     int n,m;
+    cin>>n>>m;
+    for(int i=0;i<n;i++)
+    {
+        vi g;
+        for(int j=0;j<m;j++) {
+              cin>>a;
+             g.pb(a);
+        }
+        v.pb(g);
+
+    }
+    FenwickTree2D FT(n,m,v);
+    int q;
+    cin>>q;
+    while(q--)
+    {
+        int x1,x2,y1,y2;
+        cin>>x1>>x2>>y1>>y2;
+        cout<<(FT.sum(y1,y2)+FT.sum(x1-1,x2-1)-FT.sum(y1,x2-1)-FT.sum(x1-1,y2))<<endl;
+    }
+
+    return 0;
+}

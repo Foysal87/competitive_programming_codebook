@@ -1,0 +1,64 @@
+struct node
+{
+    node* next[2];
+    int sz;///size of subtree
+    node()
+    {
+        next[0]=next[1]=NULL;
+        sz=0;
+    }
+}*root;
+void insert_num(int x)
+{
+    node* cur=root;
+    cur->sz++;
+    for(int i=31; i>=0; i--)
+    {
+        int b=(x>>i)&1;
+        if(cur->next[b]==NULL)
+            cur->next[b]=new node();
+        cur=cur->next[b];
+        cur->sz++;
+    }
+}
+///number of pairs having xor with x less than k
+ll get_count(int x,int k)
+{
+    node* cur=root;
+    ll ans=0;
+    for(int i=31; i>=0; i--)
+    {
+        if(cur==NULL)
+            break;
+        int b1=(x>>i)&1;
+        int b2=(k>>i)&1;
+        if(b2==1)
+        {
+            if(cur->next[b1])
+                ans+=1LL*cur->next[b1]->sz;
+            cur=cur->next[!b1];
+        }
+        else
+            cur=cur->next[b1];
+    }
+    return ans;
+}
+int a[N];
+int main()
+{
+    __;
+    int k,n,m;
+    cin>>n>>k;
+    for(int i=1; i<=n; i++)
+        cin>>a[i],a[i]^=a[i-1];
+    root=new node();
+    ll ans=0;
+    insert_num(0);
+    for(int i=1; i<=n; i++)
+    {
+        ans+=get_count(a[i],k);
+        insert_num(a[i]);
+    }
+    cout<<ans<<endl;
+    return 0;
+}

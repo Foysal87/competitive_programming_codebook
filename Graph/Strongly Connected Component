@@ -1,0 +1,30 @@
+ll in[N],out[N],vis[N],dp[N];
+vi v[N],rev[N];
+stack<int>s;
+int scc,n,m;
+void dfs1(int i)
+{
+    vis[i]=1;
+    for(int j=0;j<v[i].size();j++)
+    {
+        int x=v[i][j];
+        if(!vis[x])
+        {
+           dfs1(x);
+        }
+    }
+    s.push(i);
+}
+void dfs2(int i)
+{
+    vis[i]=1;
+    for(int j=0;j<rev[i].size();j++)
+    {
+        int x=rev[i][j];
+        if(!vis[x])
+        {
+           dfs2(x);
+        }
+    }
+    dp[i]=scc;
+}

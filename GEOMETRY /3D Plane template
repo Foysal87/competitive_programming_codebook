@@ -1,0 +1,46 @@
+struct plane{
+    p3 n;
+    T d;
+    plane() {}
+    plane(p3 n, T d) : n(n), d(d) {}
+    plane(p3 n, p3 p) : n(n) ,d(n|p) {}
+    plane(p3 p,p3 q,p3 r) : plane((q-p)*(r-p) , p) {}
+    T side(p3 p) { return (n|p)-d;}
+    T dist(p3 p) { return abs(side(p))/abs(n) ;}
+    plane translate(p3 t){ return {n,d+(n|t)}; }    /// translating a plane by a vector t
+    plane shiftUp(double dist) { return {n, d+dist*abs(n)}; }  /// shifting perpendicularly up with d distant
+    p3 proj(p3 p) { return p-n*side(p)/sq(n) ;}                /// The orthogonal projection of a point p on a plane
+    p3 refl(p3 p) { return p-n*2*side(p)/sq(n) ;}              /// reflection of a point
+
+};
+p3 pls(p3 a,int d) { a.x+=d; a.y+=d; a.z+=d; return a; }
+struct coords
+{
+    p3 o, dx, dy, dz;
+    /// From three points P,Q,R on the plane:
+    /// build an orthonormal 3D basis
+    coords(p3 p, p3 q, p3 r) : o(p) { dx = unit(q-p); dz = unit(dx*(r-p)); dy = dz*dx; }
+    /// From four points P,Q,R,S:
+    /// take directions PQ, PR, PS as is
+    coords(p3 p, p3 q, p3 r, p3 s) : o(p), dx(q-p), dy(r-p), dz(s-p) {}
+    pt pos2d(p3 p) { return {(p-o)|dx, (p-o)|dy};}
+    p3 pos3d(p3 p){ return {(p-o)|dx, (p-o)|dy, (p-o)|dz}; }
+};
+/// angle of 2 plane
+double smallAngle(p3 v, p3 w)
+{
+    return acos(min(abs(v|w)/abs(v)/abs(w), 1.0));
+}
+double angle(plane p1, plane p2)
+{
+    return smallAngle(p1.n, p2.n);
+}
+/// parallel || perpendicular check
+bool isParallel(plane p1, plane p2)
+{
+    return p1.n*p2.n == zero;
+}
+bool isPerpendicular(plane p1, plane p2)
+{
+    return (p1.n|p2.n) == 0;
+}

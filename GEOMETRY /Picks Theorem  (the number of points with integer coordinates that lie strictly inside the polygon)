@@ -1,0 +1,4 @@
+S = I + (B/2)-1;
+I =    the number of points with integer coordinates that lie strictly inside the polygon is through I
+B=the number of points with integer coordinates lying on the sides of the polygon is through B.
+S = polygon Area

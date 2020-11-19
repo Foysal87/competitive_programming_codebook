@@ -1,0 +1,13 @@
+int spf[N];///smallest prime factor
+vi prime;
+void linear_sieve()
+{
+    for(int i=2; i<N; i++)
+    {
+        if(spf[i]==0)
+            spf[i]=i,prime.pb(i);
+        int sz=prime.size();
+        for(int j=0; j<sz&&i<=(N-1)/prime[j]&&prime[j]<=spf[i]; j++)
+            spf[i*prime[j]]=prime[j];
+    }
+}

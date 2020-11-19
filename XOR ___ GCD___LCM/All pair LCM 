@@ -1,0 +1,45 @@
+int h[N];
+void precalc(){
+	h[1]=1; // sum_{d|n} d*mu**2(n/d)*mu(d)
+	for(int i=2;i<N;++i){
+		if(!h[i]){
+			h[i]=i;
+			for(int j=2*i;j<N;j+=i) if(!h[j]){
+				h[j]=i;
+			}
+		}
+	}
+	for(int i=2;i<N;++i){
+		int p=h[i], x=i/p;
+		if(x%p){
+			h[i]=(1-p)*h[x];
+		}else{
+			x/=p;
+			if(x%p) h[i]=-p*h[x];
+			else h[i]=0;
+		}
+	}
+	// sum_{1<=i<=n} i*h[i]
+	for(int i=1;i<N;++i){
+		h[i]=i*h[i]+h[i-1];
+	}
+}
+#define compute(A,D) ((A/D)*(A/D+1)/2)
+int main() {
+	int T;
+	precalc();
+		int A, B;
+		int ans = 0 ;
+		scanf("%d%d",&A,&B);
+        if(A>B)swap(A,B);
+        int n = 1;
+        while(n<=A) {
+            int an = A/n, bn = B/n;
+            int nextN = min(A/an+1,B/bn+1);
+            ans +=  (h[nextN-1] - h[n-1])*  compute(A,n) * compute(B,n) ;
+            n = nextN;
+        }
+		printf("%d\n",ans);
+	return 0;
+}
+

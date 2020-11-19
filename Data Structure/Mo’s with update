@@ -1,0 +1,115 @@
+///complexity O(n^(5/3) + Q.n^(2/3))
+///sum of distinct numbers in range with update
+int block;
+struct query
+{
+ int l,r;///query range
+ int updcnt;///number of update happened before this query
+ int idx;///query index
+ bool operator<(const query& x)const
+ {
+ 	if(l/block==x.l/block){
+ 		if(r/block==x.r/block) return updcnt<x.updcnt;
+ 		else return r/block<x.r/block;
+ 	}
+ 	else return l/block<x.l/block;
+ }
+}q[N];
+struct Upd
+{
+ int idx;///update index
+ int prv;///array had value prv before this update
+ int nxt;///array will have value nxt after this update
+}upd[N];
+int curl,curr,a[N],cnt[5*N],val[5*N];
+ll ans;
+unorder_map<int,int>mp;
+/// When adding a number, we first nullify it's effect on current
+/// answer, then update corresponding array, then account for it's effect again.
+inline void add(int x)
+{
+	cnt[x]++;
+	if(cnt[x]==1) ans+=val[x];
+}
+///removing is quite same as adding
+inline void remov(int x)
+{
+	cnt[x]--;
+	if(cnt[x]==0) ans-=val[x];
+}
+inline void do_upd(int upd_idx)
+{
+	int i=upd[upd_idx].idx;
+	int now=upd[upd_idx].nxt;
+  ///if the update is within our current range then re-correct our ans
+	if(i>=curl&&i<=curr) remov(a[i]);
+	a[i]=now;
+	if(i>=curl&&i<=curr) add(a[i]);
+}
+inline void undo_upd(int upd_idx)
+{
+	int i=upd[upd_idx].idx;
+	int now=upd[upd_idx].prv;
+ ///if the update is within our current range then re-correct our ans
+	if(i>=curl&&i<=curr) remov(a[i]);
+	a[i]=now;
+	if(i>=curl&&i<=curr) add(a[i]);
+}
+int aux[N];
+ll res[N];
+int main()
+{
+    __;
+	int i,j,k,n,m,U=0,Q=0,que,l,r,t,z=0;
+	string ch;
+	cin>>n;
+	for(i=1;i<=n;i++){
+		cin>>a[i];
+ if(!mp.count(a[i])) mp[a[i]]=++z,val[z]=a[i];///compressing
+ a[i]=mp[a[i]];
+ aux[i]=a[i];
+}
+cin>>que;
+for(i=0;i<que;i++){
+	cin>>sh;
+	cin>>l>>r;
+	if(ch[0]=='U'){
+		++U;
+		upd[U].idx=l;
+ if(!mp.count(r)) mp[r]=++z,val[z]=r;///compressing
+ upd[U].nxt=mp[r];
+ upd[U].prv=aux[l];
+ aux[l]=mp[r];
+}
+else{
+	q[Q].l=l;
+	q[Q].r=r;
+	q[Q].updcnt=U;
+	q[Q].idx=i;
+	Q++;
+}
+}
+block=(int)(cbrt(n*1.0)+eps);
+block*=block;
+sort(q,q+Q);
+ int cur=0;///tracks the number of updates already happened
+ mem(res,-1);
+ for(i=0;i<Q;i++){
+ 	l=q[i].l,r=q[i].r,t=q[i].updcnt;
+ 	while(cur<t){
+ 		cur++;
+ 		do_upd(cur);
+ 	}
+ 	while(cur>t){
+ 		undo_upd(cur);
+ 		cur--;
+ 	}
+ 	while(curl<l) remov(a[curl++]);
+ 	while(curl>l) add(a[--curl]);
+ 	while(curr<r) add(a[++curr]);
+ 	while(curr>r) remov(a[curr--]);
+ 	res[q[i].idx]=ans;
+ }
+ for(i=0;i<que;i++) if(res[i]!=-1) cout<<res[i]<<endl;
+ 	return 0;
+}

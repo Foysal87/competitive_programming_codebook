@@ -1,0 +1,132 @@
+/// Each node has a color, white or black. All the nodes are black initially.
+/// update a node (white to black/ black to white)
+/// query a node u, min_dist(u, a white colour node)?
+/// Property
+/// make the subtree based on a centroid where every (child subtree size)/2< total subtree size
+/// centroid is computed logn time
+/// every node comes logn time so total complexity nlogn time
+const int N   = 500050;
+const ll inf  = 2e18;
+const int INF = 1e9+100;
+struct CentroidDecomposition {
+	vector<vi> cd, &e;
+	vector<vector<pii>> dist;
+	vector<bool> tocheck, col;
+	vi size, p,par;
+	vector<set<pii>> distances;
+	int root;
+	CentroidDecomposition(vector<vi> &tree) : e(tree) {
+		int sz = e.size();
+		tocheck.assign(sz, true);
+		col.assign(sz, false);
+		cd.assign(sz, vi());
+		p.assign(sz, -1);
+		size.assign(sz, 0);
+		dist.assign(sz, vector<pii>());
+		distances.assign(sz, set<pii>());
+		dfs(0);
+		root = decompose(0, sz);
+	}
+	void dfs(int u) {
+		for (int v : e[u]) {
+			if (v == p[u]) continue;
+			p[v] = u;
+			dfs(v);
+			size[u] += 1 + size[v];
+		}
+	}
+/// dist keep distance from him to his parent
+/// for path problem we need to edit here
+/// like how many paths length k : you need tofor u compute how many paths have length k where lca will be u…. in O(n)  time
+/// how many pair have xor k
+/// pair xor sum
+/// nlogn times take
+	void dfs2(int u, int d, int s, int p) {
+		if (!tocheck[u]) return;
+		dist[u].push_back({s, d});
+		for (int v : e[u]) {
+			if (!tocheck[v] || v == p) continue;
+			dfs2(v, d + 1, s, u);
+		}
+	}
+/// query will be here
+/// node u to white node
+	int closest(int u) {
+		int best = INF;
+		for (pii vd : dist[u]) {
+			int v = vd.first, d = vd.second;
+			if (distances[v].size() > 0) {
+				auto it = distances[v].begin();
+				int nd = d + it->first;
+				best = best < nd ? best : nd;
+			}
+		}
+		if (best == INF) best = -1;
+		return best;
+	}
+/// updating a node. Here white to black // black to white
+	void toggle(int u) {
+		col[u] = !col[u];
+		for (pii vd : dist[u]) {
+			int v = vd.first, d = vd.second;
+			if (col[u])
+				distances[v].insert({d, u});
+			else
+				distances[v].erase({d, u});
+		}
+	}
+/// Total nlogn time
+	int decompose(int _u, int sz) {
+		int u = _u;
+		while (true) {
+			int nu = -1;
+			for (int v : e[u]) {
+				if (!tocheck[v] || v == p[u]) continue;
+				if (1 + size[v] > sz / 2) nu = v;
+			}
+			if (sz - 1 - size[u] > sz / 2 && p[u] != -1
+				&&tocheck[p[u]]) nu = p[u];
+			if (nu != -1) u = nu; else break;
+		}
+		for (int v = p[u]; v != -1 && tocheck[v]; v = p[v])
+			size[v] -= 1 + size[u];
+		dfs2(u, 0, u, -1);
+		tocheck[u] = false;
+		for (int v : e[u]) {
+			if (!tocheck[v]) continue;
+			int V2 = 1 + size[v];
+			if (v == p[u]) V2 = sz - 1 - size[u];
+			int X=decompose(v, V2);
+			cd[u].push_back(X);
+		}
+		return u;
+	}
+};
+
+int main(){
+	__;
+	int n;
+	cin >> n;
+	vector<vi> tree(n, vi());
+	for (int i = 0; i < n - 1; ++i) {
+		int a, b;
+		cin >> a >> b;
+		a--; b--;
+		tree[a].push_back(b);
+		tree[b].push_back(a);
+	}
+	CentroidDecomposition cd(tree);
+	int q;
+	cin >> q;
+	for (int i = 1; i <= q; ++i) {
+		int t, u;
+		cin >> t >> u;
+		u--;
+		if (t == 0) {
+			cd.toggle(u);
+		} else {
+			cout << cd.closest(u) <<endl;
+		}
+	}
+	return 0;
+}

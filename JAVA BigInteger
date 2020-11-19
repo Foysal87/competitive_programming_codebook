@@ -1,0 +1,58 @@
+Input - output System
+import java.math.BigInteger;
+import java.util.Scanner;
+public class Bigint {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        BigInteger bi = sc.nextBigInteger();
+System.out.println(bi.toString());
+    }
+}
+
+
+
+
+
+Sorted Alphabetically
+Abs :   bi= bi.abs();  return absoulate value.
+
+Add:   bi1=bi1.add(bi2); return bi1+bi2
+
+And:   bi1=bi1.and(bi2); return bi1&bi2
+
+AndNot:  bi1=bi1.andNot(bi2); return bi1& ~bi2
+
+bitCount:  int res=bi1.bitCount(); return integer. How much bit in binary represtation
+Bitlength:  int res=bi1.bitLength(); return integer. Binary length of biginteger.
+Clearbit:  bi1=bi1.clearBit(2); perform clearbit operation on bi1 with index 2. (7==>3)
+CompareTo:  int res=bi1.compareTo(bi2); if return 0(equal),1(bi1>bi2),-1(bi1<bi2)
+Divide:     bi3 = bi1.divide(bi2); return bi1/bi2
+Divideandreminder: BigInteger bi[] = bi1.divideAndRemainder(bi2); b[0] return divide           -     result and b[1] gives reminder.
+DoubleValue:  d1 = bi1.doubleValue(); Biginteger to double
+Equals:    bool b=bi1.equals(bi2); if equals return true ,if not return false
+Flipbit:   bi2=bi1.flipBit(int x); : x’th bit fliping. Strat from 0 from right side.
+GCD:		bi3 = bi1.gcd(bi2); gave gcd of two bigintger
+Getlowestsetbit:  int i = bi1.getLowestSetBit(); 7==>0
+intvalue :    int i = bi1.intValue();  Biginteger==>integer
+Longvalue:   long I=bi1.longValue();  Biginteger==>long long integer
+Max :         bi3 = bi1.max(bi2); return maximum biginteger between bi1,bi2
+Min :         bi3 = bi1.min(bi2); return minimum biginteger between bi1,bi2
+Mod:         bi3 = bi1.mod(bi2); return bi1%bi2
+Modinverse:   bi3 = bi1.modInverse(bi2); return (1/bi1)%bi2
+ModPow:      bi3 = bi1.modPow(exponent, bi2); (bi1^exponent)%bi2
+Multiply:      bi3 = bi1.multiply(bi2); return bi1*bi2
+Negate:       bi2 = bi1.negate(); bi2=-bi1;
+Nextprobableprime:  bi2=bi1.nextProbablePrime(); return bi1<bi2, where bi2 is prime
+ Pow:   bi2 = bi1.pow(exponent); return (bi1^exponent);
+ Or :    bi3 = bi1.or(bi2); return (bi1|bi2)
+Probaleprime:  int bitLength = 3;
+     Random rnd = new Random();
+     bi = BigInteger.probablePrime(bitLength, rnd);
+  Return 3 bitlength prime. Like 5. 5 =101 which is 3 bitlength.
+setbit:    bi2 = bi1.setBit(int n); return (bi1| (1<<n))
+Shiftleft:   bi2 = bi1.shiftLeft(int n); return (bi1<<n)
+Shiftright:   bi2 = bi1.shiftRight(int n); return (bi1>>n)
+Subtract :   bi3 = bi1.subtract(bi2); return (bi1-bi2)
+Testbit:    b1 = bi.testBit(int n); return boolean true if n’th bit is 1.
+Valueof:  bi = BigInteger.valueOf(long l);  make bi=l;
+Xor :     bi3 = bi1.xor(bi2);   return bi1^bi2

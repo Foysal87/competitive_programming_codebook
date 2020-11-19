@@ -1,0 +1,15 @@
+Given an integer N, find how many pairs (A, B) are there such that: gcd(A, B) = A xor B where
+1 ≤ B ≤ A ≤ N.
+int s[30000000+10];
+int init(){
+    int sum = 0;
+    for(int c = 1; c <= maxn/2; c++){
+        for(int a = c+c ; a <= maxn ; a += c){
+            int b = a - c;
+            if((a ^ b) == c)
+                s[a]++;
+    }
+    for(int i = 2; i <= maxn; i++)
+        s[i] += s[i-1];
+}
+}

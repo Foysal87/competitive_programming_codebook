@@ -1,0 +1,24 @@
+struct p3{
+ T x,y,z;
+ p3 () {}
+ p3(T a,T b,T c) : x(a),y(b),z(c)  {}
+ p3 operator + (p3 p) { return {x+p.x,y+p.y,z+p.z}; }
+ p3 operator - (p3 p) { return {x-p.x,y-p.y,z-p.z}; }
+ p3 operator * (T d) { return {x*d,y*d,z*d}; }
+ p3 operator / (T d) { return {x/d,y/d,z/d}; }
+ bool operator ==(p3 p) {return tie(x,y,z)==tie(p.x,p.y,p.z) ;}
+ bool operator !=(p3 p) {return !operator==(p); }
+ p3 scan(){cin>>x>>y>>z;}
+
+};
+T operator |(p3 v, p3 w){ return v.x*w.x + v.y*w.y + v.z*w.z ;}                             /// dot product
+p3 operator*(p3 v, p3 w){ return {v.y*w.z - v.z*w.y, v.z*w.x -v.x*w.z , v.x*w.y - v.y*w.x} ; } /// cross product
+p3 zero(0,0,0);                                                                             /// zero vector
+T sq(p3 v) { return v|v; }                                                                  /// vector square
+T abs(p3 v) { return sqrt(sq(v)); }
+p3 unit(p3 v) { return v/abs(v) ;}                                                          /// unit vector
+T angle3D(p3 v, p3 w){ double cosT = (v|w)/abs(v)/abs(w) ; return acos(max(-1.0,min(1.0,cosT))); }                                                           /// angle
+T orient3D(p3 p, p3 q, p3 r, p3 s) {return (q-p)*(r-p)|(s-p);}                              /// orientation
+T orientByNormal(p3 p, p3 q, p3 r, p3 n) {return (q-p)*(r-p)|n;}                            /// normal vector which side it is : if ans>0 left turn : ans=0 aligned : ans<0 : right turn
+
+/// cross(v , w)= 2D plane k 1D plane e covert kora and ei plane er upor parpendular vabe z axis borabor ekta new vector neya

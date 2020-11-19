@@ -1,0 +1,65 @@
+struct line3d
+{
+    p3 d, o;
+/// From two points P, Q
+    line3d(p3 p, p3 q) : d(q-p), o(p) {}
+/// From two planes p1, p2 (requires T = double)
+  line3d(plane p1, plane p2) { d = p1.n*p2.n; o = (p2.n*p1.d - p1.n*p2.d)*d/sq(d); }
+    double sqDist(p3 p)  {return sq(d*(p-o))/sq(d);}
+    double dist(p3 p)  {return sqrt(sqDist(p));}    /// distance from plan to 3d line
+    bool cmpProj(p3 p, p3 q){return (d|p) < (d|q);} /// we need it for sorting along a line
+    p3 proj(p3 p) {return o + d*(d|(p-o))/sq(d);} /// orthogonal projection
+    p3 refl(p3 p)  {return proj(p)*2 - p;}   /// orthogonal refelction
+    /// plane line intersection
+    p3 inter(plane p)
+    {
+        return o - d*p.side(o)/(d|p.n);}
+};
+/// line-line distance
+double dist(line3d l1, line3d l2)
+{ p3 n = l1.d*l2.d;
+if (n == zero) // parallel
+return l1.dist(l2.o);
+return abs((l2.o-l1.o)|n)/abs(n); }
+
+///closest point l1 to l3
+p3 closestOnL1(line3d l1, line3d l2)
+{ p3 n2 = l2.d*(l1.d*l2.d);
+return l1.o + l1.d*((l2.o-l1.o)|n2)/(l1.d|n2);
+}
+
+/// angle of 2 line
+double smallAngle(p3 v, p3 w)
+{
+    return acos(min(abs(v|w)/abs(v)/abs(w), 1.0));
+}
+double angle(line3d l1, line3d l2)
+{
+    return smallAngle(l1.d, l2.d);
+}
+bool isParallel(line3d l1, line3d l2)
+{
+    return l1.d*l2.d == zero;
+}
+bool isPerpendicular(line3d l1, line3d l2)
+{
+    return (l1.d|l2.d) == 0;}
+///Angle between line and plane
+double angle(plane p, line3d l)
+{
+    return M_PI/2 - smallAngle(p.n, l.d);
+}
+bool isParallel(plane p, line3d l)
+{
+    return (p.n|l.d) == 0;
+}
+bool isPerpendicular(plane p, line3d l)
+{
+    return p.n*l.d == zero;
+}
+
+/// plane ==> line3d perpendicular and goes to a point o
+plane perpThrough(line3d l, p3 o) {return plane(l.d, o);}
+/// a line  ⇒ plane perpendi and goes to a point o
+line3d perpThrough(plane p, p3 o) {return line(o, o+p.n);}
+

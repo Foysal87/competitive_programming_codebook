@@ -1,0 +1,23 @@
+///==>uva extreme gcd
+///==>find all pair gcd
+///  for(i=1; i<N; i++)
+/// for(j=i+1; j<=N; j++)  res+=gcd(i,j);
+
+int phi[MX];
+int sum[MX];
+void sum_function(void)
+{
+    register int i, j;
+    for(i = 2; i < MX; i++)
+    {
+        sum[i] += sum[i-1]+phi[i];
+        for(j = i + i; j < MX; j+=i)             sum[j] += i * phi[j/i];
+    }
+    return ;
+}
+int main()
+{
+    phi_function();
+    sum_function();
+    printf("%llu\n", sum[n]);
+}

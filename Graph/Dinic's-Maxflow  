@@ -1,0 +1,63 @@
+///V^2*E Complexity
+/// Be careful about direction and flow
+/// For Directed graph it will work
+/// Everything is integer so for long long make it long long
+/*
+For Bipart_matching just Create 2 extra node and add them with it
+if Array a,b and i take two node x and y which are large then n
+and connect with x-->a , b-->y and a-->b and find the flow(x,y)
+*/
+#define inf (1<<29)
+const int N = 1000; // E*2!
+
+int cap[N],flow[N];
+int to[N],_prev[N],last[N],used[N],level[N];
+
+struct MaxFlow{
+    int V,E;
+/// how many node!
+    MaxFlow(int n){
+        int i;
+        V = n; E = 0;
+        for(int i=0;i<V;i++) last[i] = -1;
+    }
+
+    void add_edge(int x, int y, int  f){
+        cap[E] = f; flow[E] = 0; to[E] = y; _prev[E] = last[x]; last[x] = E; E++;
+        cap[E] = 0; flow[E] = 0; to[E] = x; _prev[E] = last[y]; last[y] = E; E++;
+    }
+
+    bool bfs(int s, int t){
+        int i;
+       for(int i=0;i<V;i++) level[i] = -1;
+        queue <int> q;
+        q.push(s); level[s] = 0;
+        while(!q.empty()){
+            int x = q.front(); q.pop();
+            for(i=last[x];i>=0;i=_prev[i]) if(level[to[i]] == -1 && cap[i] > flow[i]) {q.push(to[i]); level[to[i]] = level[x] + 1;}
+        }
+        return (level[t] != -1);
+    }
+
+    int dfs(int v, int t, int f){
+        int i;
+        if(v == t) return f;
+        for(i=used[v];i>=0;used[v]=i=_prev[i]) if(level[to[i]] > level[v] && cap[i] > flow[i]){
+            int tmp = dfs(to[i],t,min(f,cap[i]-flow[i]));
+            if(tmp > 0) {flow[i] += tmp; flow[i^1] -= tmp; return tmp;}
+        }
+        return 0;
+    }
+
+    int maxflow(int s, int t){
+        int i;
+        while(bfs(s,t)){
+            for(int i=0;i<V;i++) used[i] = last[i];
+            while(dfs(s,t,inf) != 0);
+        }
+        int ans = 0;
+        for(i=last[s];i>=0;i=_prev[i]) ans += flow[i];
+        return ans;
+    }
+
+};

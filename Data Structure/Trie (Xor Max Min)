@@ -1,0 +1,88 @@
+struct node
+{
+    node* next[2];
+    node()
+    {
+        next[0]=next[1]=NULL;
+    }
+}*root;
+int sum[mxn];
+void insert_num(int x)
+{
+    node* cur=root;
+    int b;
+    for(int i=31; i>=0; i--)
+    {
+        b=(x>>i)&1;
+        if(cur->next[b]==NULL)
+            cur->next[b]=new node();
+        cur=cur->next[b];
+    }
+}
+/// 1^0==1
+/// 0^1==1
+int get_max(int x)
+{
+    node* cur=root;
+    int k,ans=0;
+    for(int i=31; i>=0; i--)
+    {
+        k=(x>>i)&1;
+        if(cur->next[!k])
+            cur=cur->next[!k],ans<<=1,ans++;
+        else
+            cur=cur->next[k],ans<<=1;
+    }
+    return ans;
+}
+/// 0^0==0
+/// 1^1==0
+int get_min(int x)
+{
+    node* cur=root;
+    int k,ans=0;
+    for(int i=31; i>=0; i--)
+    {
+        k=(x>>i)&1;
+        if(cur->next[k])
+            cur=cur->next[k],ans<<=1;
+        else
+            cur=cur->next[!k],ans<<=1,ans++;
+    }
+    return ans;
+}
+void del(node* cur)
+{
+    for(int i=0; i<2; i++)
+        if(cur->next[i])
+            del(cur->next[i]);
+    delete(cur);
+}
+int main()
+{
+    int k,n,m,t,cs=0;
+    cin>>t;
+    while(t--)
+    {
+        root= new node();
+        int mx=-inf,mn=inf;
+       cin>>n;
+        sum[0]=0;
+        /// xor serially for getiing subarray
+        for(int i=1; i<=n; i++)
+            cin>>k,sum[i]=sum[i-1]^k;
+        insert_num(0);
+        for(int i=1; i<=n; i++)
+        {
+            mx=max(mx,get_max(sum[i]));
+            mn=min(mn,get_min(sum[i]));
+            insert_num(sum[i]);
+        }
+        for(int i=1; i<=n; i++)
+            sum[i]=0;
+        del(root);
+    }
+    return 0;
+}
+/// SUBARRAY xor == Trie
+/// Subset xor == basis vector

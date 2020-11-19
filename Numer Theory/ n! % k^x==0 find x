@@ -1,0 +1,20 @@
+vector<pii>factor;
+/// get all factor of k and save it in factor
+int fact_pow (int n, int p) {
+    int res = 0;
+    while (n) {
+        n /= p;
+        res += n;
+    }
+    return res;
+}
+int find_x(int n)
+{
+    int ans=inf;
+    for(auto i : factor)
+    {
+        ans=min(ans,fact_pow(n,i.fi)/i.sc);
+    }
+    return ans;
+}
+

@@ -1,0 +1,37 @@
+ll parent[N],rankk[N],siz[N];
+void make_set(int n)
+{
+    for(int i=0;i<=n;i++)
+
+       {
+    parent[i]=i;
+    rankk[i]=0;
+    siz[i]=1;
+       }
+}
+int find_parent(int a)
+{
+    if(a!=parent[a]) parent[a]=find_parent(parent[a]);
+    return parent[a];
+}
+void unionn(int a,int b)
+{
+    int xx=find_parent(a);
+    int yy=find_parent(b);
+      if(xx!=yy)
+    {
+        if(rankk[xx]>rankk[yy])
+        {
+            parent[yy]=xx;
+            siz[xx]+=siz[yy];
+        }
+        else
+        {
+            parent[xx]=yy;
+            siz[yy]+=siz[xx];
+            if(rankk[xx]==rankk[yy])
+            rankk[yy]++;
+        }
+    }
+}
+

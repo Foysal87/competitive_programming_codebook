@@ -1,0 +1,60 @@
+namespace myrand{
+	// rand : [0,2^31)
+	// randint : [-2^31,2^31)
+	// randll : [-2^63,2^63)
+	// randbit : 0,1
+	unsigned int x[5]={107896582, 1107972621, 1195573091, 1224749359, 241825441};
+	unsigned int get16(){
+		unsigned long long tmp=(107374182ll*x[0]+104480ll*x[4]);
+		unsigned int res=(tmp>>31)+(tmp&0x7fffffffu);
+		x[0]=x[1],x[1]=x[2],x[2]=x[3],x[3]=x[4];
+		return x[4]=res>=2147483647?res-2147483647:res;
+	}
+	void mysrand(unsigned int seed){
+		for (int i=0;i<5;i++) seed=(seed+1)%2147483647,x[i]=seed;
+		for (int i=0;i<5;i++) get16();
+	}
+	int randint(){
+		int res=0;
+		res+=int(get16());
+		res+=int(get16())<<16;
+		return res;
+	}
+	long long randll(){
+		long long res=0;
+		res+=(long long)(get16());
+		res+=(long long)(get16())<<16;
+		res+=(long long)(get16())<<32;
+		res+=(long long)(get16())<<48;
+		return res;
+	}
+	int randbit(){
+		return ((get16())>>7)&1;
+	}
+	int myrand(){
+		int x=randint();
+		if(x<0)return ~x;
+		return x;
+	}
+	template<typename RandomAccessIterator>void my_randomshuffle(RandomAccessIterator first,RandomAccessIterator last){
+		int n=last-first;
+		for (int i=1;i<n;i++){
+			int to=myrand()%(i+1);
+			swap(first[to],first[i]);
+		}
+	}
+#define rand myrand::myrand
+#define srand myrand::mysrand
+#define random_shuffle myrand::my_randomshuffle
+};
+
+// rand integer from [l,r]
+int randlr(int l,int r){
+	return ((unsigned long long)(myrand::randll()))%(r-l+1)+l;
+}
+//rand real from [0,1]
+double randreal(){
+	long long t=myrand::randll();
+	if(t<0)t=~t;
+	return (long double)(t)/(long double)(0x8000000000000000u);
+}

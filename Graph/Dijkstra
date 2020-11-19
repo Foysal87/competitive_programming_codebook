@@ -1,0 +1,33 @@
+
+int weight[MAXX][MAXX];
+vector<int>G[MAXX];
+int dis[MAXX];
+struct DATA{
+    int city, dist;
+    bool operator < (const DATA &p) const {
+      return p.dist > dist;
+    }
+};
+void dijkstra(int src)
+{
+    int len;
+    priority_queue<DATA>Q;
+    DATA u, v;
+    u.city = src;
+    u.dist = 0;
+   dis[u.city] = 0;
+    Q.push(u);
+    while(!Q.empty()) {
+        u = Q.top(); Q.pop();
+        if(u.dist != dis[u.city]) continue;
+        len = G[u.city].size();
+        for (int i = 0; i < len; i++) {
+            v.city = G[u.city][i];
+            v.dist = max(u.dist, weight[u.city][v.city]);
+            if(v.dist < dis[v.city]) {
+                dis[v.city] = v.dist;
+                Q.push(v);
+            }
+        }
+    }
+}

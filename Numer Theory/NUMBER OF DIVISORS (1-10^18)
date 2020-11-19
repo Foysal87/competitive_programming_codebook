@@ -1,0 +1,70 @@
+#define LM 1000007
+#define PLM 100000
+int primes[PLM+3];
+bool flag[LM+7];
+//faster way of (a*b)%c
+ll mulmod(ll a,ll b,ll c)
+{
+    ll x=0,y=a%c;
+    while(b>0)
+    {
+        if(b%2==1)
+        {
+            x=(x+y)%c;
+        }
+        y=(y*2)%c;
+        b/=2;
+    }
+    return x%c;
+}
+ll modulo(ll a, ll b, ll c)
+{
+    ll x=1,y=a;
+    while(b>0)
+    {
+        if(b%2==1)
+        {
+            x=mulmod(x,y,c);
+        }
+        y=mulmod(x,y,c);
+        b/=2;
+    }
+    return x%c;
+}
+/*Miller -Rabin priliminary test*/
+bool Miller(long long p,int iteration){}
+void seive()
+{
+save prime number in prime array;
+}
+ll n,ans;
+ll NoOfDiv()
+{
+    ll i,val,Count,sum=1;
+    for(i=0;primes[i]*primes[i]<n && i<78499; i++)
+    {
+        if(n%primes[i]==0)
+        {
+             Count=0;
+             while(n%primes[i]==0)
+             {
+                 n/=primes[i];
+                 Count++;
+             }
+             sum*=(Count+1);
+        }
+    }
+    return sum;
+}
+int main()
+{
+    seive();
+    cin>>n;
+    ans=NoOfDiv();
+    ll g=(ll)sqrt(n);
+    if(n==1) cout<<ans<<endl;
+    else if(Miller(n,20)) cout<<2*ans<<endl;
+    else if(g*g==n && Miller(g,20)) cout<<3*ans<<endl;
+    else cout<<4*ans<<endl;
+
+}

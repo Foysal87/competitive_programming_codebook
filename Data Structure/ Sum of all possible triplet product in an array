@@ -1,0 +1,54 @@
+/// complexity O(n)
+/// If we multiple full array , A*A*A, then we get something extra like 3a*b*b / a*a*a
+/// so we subtract all possible (a*b*b / a*c*c / a*a*a / at least two common /etc ) three times
+/// but we subtract (a*a*a) 2 times extra
+/// so we need to add 2 times (a*a*a)
+/// so if a1=(a1+a2+a3+...)
+/// a2=(a1*a1 + a2*a2 + a3*a3 + .....)
+/// a3 = (a1*a1*a1 + a2*a2*a2 + a3*a3*a3 + .....)
+/// then sum = {(a1*a1*a1) -(3*a1*a2) + (2*a3) }/6
+/// cause every triplet comes 6 times
+ ll A[N];
+int main()
+{
+    ll n;
+    ll sum=0;
+    string s;
+    cin>>n;
+     for(int i=1;i<=n;i++) cin>>A[i];
+     ll a1=0,a2=0,a3=0;
+     for(int i=1;i<=n;i++)
+     {
+         a1+=A[i];
+         a2+=(A[i]*A[i]);
+         a3+=(A[i]*A[i]*A[i]);
+     }
+     sum=(a1*a1*a1)-(3*a1*a2)+(2*a3);
+     cout<<(sum/6)<<endl;
+}
+
+/// another solution with dp, for reduce overflow
+
+ll A[N],B[N],C[N],D[N];
+int main()
+{
+    ll n;
+    ll sum=0;
+    cin>>n;
+     for(int i=1;i<=n;i++) cin>>A[i];
+    B[n-1] = A[n];
+    for(int i=n-2;i>=0;i--)
+        B[i] = (B[i+1] + A[i+1]);
+
+    for(int i=1;i<n-1;i++)
+        C[i] = (A[i+1] * B[i+1]);
+
+    D[n-2] = C[n-2];
+    for(int i=n-3;i>=1;i--)
+        D[i] = (D[i+1] + C[i]);
+
+    for(int i=0;i<n-2;i++)
+        sum = (sum + A[i+1] * D[i+1]);
+     cout<<sum<<endl;
+    return 0;
+}

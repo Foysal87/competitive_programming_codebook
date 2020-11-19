@@ -1,0 +1,49 @@
+vi basis;
+int add(int x)
+{
+    for(auto &it:basis)
+        if((x^it)<x)
+            x^=it;
+    for(auto &it:basis)
+        if((it^x)<it)
+            it^=x;
+    if(x)
+    {
+        basis.pb(x);
+        assert(basis.size()<=30);   ///(log (MAX value of a[i]))
+        sort(basis.begin(),basis.end());
+    }
+}
+/// check any subset= x
+bool checkXor(int x)
+{
+   for(auto &it:basis)
+        if((x^it)<x)
+            x^=it;
+    return (x==0);
+}
+///k th subset xor is the xor value of positions where k has one in its binary representation
+///maximum xor value is the xor of all values of basis vector
+int kth(int k)
+{
+    k--;
+    int ans=0;
+    for(int i=0; i<basis.size(); i++)
+        if((k>>i)&1)
+            ans^=basis[i];
+    return ans;
+
+}
+/// how many ways we can make xor subset = x
+/// compute power array where pow[i]= 2^i
+/// size of array = n
+/// size of basis =sz;
+int xor_count(int x,int n)
+{
+    int sz=basis.size();
+    if(!checkXor(x))
+    {
+        return 0;
+    }
+    return pow[n-sz]
+}

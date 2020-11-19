@@ -1,0 +1,36 @@
+// return is there a negative cycle or not
+//complexity VE
+#define SIZE 1010 
+#define INF 2000000000 
+vector<int> adj[SIZE],cost[SIZE];
+//0 based
+bool BellmanFord(int source,int nodes)
+{
+    //returns true if it has negative cycle
+    vector<int>dist;
+    int i,j,k,w,v;
+    for(i=0; i<=nodes; i++)
+    {
+        //distance from source
+        dist.push_back(INF);
+    }
+    dist[source]=0;
+    for(i=1; i<=nodes-1; i++)
+    {
+        for(j=1; j<=nodes; j++)             
+            for(k=0; k<adj[j].size(); k++)
+            {
+                v=adj[j][k];
+                w=cost[j][k];
+                dist[v]=min(dist[v],dist[j]+w);
+            }
+    }
+    for(i=1; i<=nodes; i++)        
+        for(j=0; j<adj[i].size(); j++)
+        {
+            v=adj[i][j];
+            w=cost[i][j];
+            if(dist[v]>dist[i]+w) return true;
+        }
+    return false;
+}

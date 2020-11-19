@@ -1,0 +1,67 @@
+struct pt{
+        T x,y;
+        pt() {}
+        pt(T x, T y) : x(x), y(y) {}
+        pt(const pt &p) : x(p.x), y(p.y) {}
+        pt operator+(pt p){ return {x+p.x,y+p.y};}
+        pt operator-(pt p){ return {x-p.x,y-p.y};}
+        pt operator*(T d) { return {x*d,y*d};}
+        pt operator/(T d) { return {x/d,y/d};}
+        bool operator==(pt b){return x==b.x && y==b.y;}
+        bool operator!=(pt b){return x!=b.x || y!=b.y;}
+        pt scan(){cin>>x>>y;}
+};
+ostream& operator<<(ostream& os,pt p){return os<<" ( "<<p.x<<" , "<<p.y<< " )";}
+T sq(pt p){ return p.x*p.x + p.y*p.y ;}
+T abs(pt p){ return sqrt(sq(p));}
+T dist(pt a,pt b) { return sqrt(((a.x-b.x)*(a.x-b.x))+((a.y-b.y)*(a.y-b.y))); }
+template <typename T> int sgn(T x){return (T(0)<x)-(x-T(0));}
+
+/// Converting radian to degree
+T degree(T a){ return a*180.0/pi;}
+T radian(T a){ return a*pi/180.0;}
+
+/// translate a vector X point to Y point
+pt translate(pt v,pt p){return p+v;}
+
+///scaling a vector . a vector X point which center is C . now we want to size this object F factor
+pt scale(pt c,double factor,pt p){ return c+(p-c)*factor ;}
+
+/// Rotates a point CCW or CW around the Origin
+pt RotateCCW90(pt p){ return pt(-p.y,p.x); }
+pt RotateCW90(pt p){ return pt(p.y,-p.x); }
+pt RotateCCW(pt p, double theta){ return pt(p.x*cos(theta)-p.y*sin(theta), p.x*sin(theta)+p.y*cos(theta)); }
+pt RotateCW(pt p, double theta){ return pt(p.x*cos(theta)+p.y*sin(theta), -p.x*sin(theta)+p.y*cos(theta)); }
+
+/// dot and cross
+T dot(pt v,pt w){ return v.x*w.x+v.y*w.y;}
+bool isPerp(pt v,pt w){ return dot(v,w)==0;}
+T angle(pt v, pt w){ double theta=dot(v,w)/abs(v)/abs(w); return acos(max(-1.0,min(1.0,theta)));}
+T cross(pt v,pt w){ return v.x*w.y - v.y*w.x; }
+T angle3Vector(pt b,pt a,pt c){ return angle(b-a,c-a); }              /// angle of 3 vector
+
+///orientation : x,y is two point and  z is another point. computing z is which side. If ans is positive
+/// then, if we go left OR z is in left side . if ans=0 then z is collinear or same line
+T orient(pt a,pt b, pt c){ return cross(b-a,c-a);}
+
+/// a point X is in the angle <BAC or not?
+bool inAngle(pt a,pt b,pt c,pt x){
+assert(orient(a,b,c)!=0);
+if(orient(a,b,c)<0) swap(b,c);
+return orient(a,b,x)>=0 && orient(a,c,x)<=0;
+}
+/// orinet angle : B vector er sapekkhe anticlockwise joto angle e C vector thake
+double orientedAngle(pt a,pt b,pt c)
+{ if(orient(a,b,c)>=0) return angle3Vector(a,b,c);
+    return 2*pi-angle3Vector(a,b,c); }
+
+///covex checking with orient: if every angle of consecutive point angle is same sign. all>=0 or all<=0 then it will be convex
+bool isConvex(vpt p) { bool hasPos=false,hasNeg=false;int n=p.size(); for(int i=0;i<p.size();i++){ int o=orient(p[i],p[(i+1)%n],p[(i+2)%n]);if(o>0) hasPos=true; if(o<0) hasNeg=true;}  return !(hasPos && hasNeg); }
+
+/// Polar sort : sorting all point order of angle(360 degree) & center from(0,0)
+bool half(pt p){ assert(p.x!=0 || p.y!=0); return p.y>0 || (p.y==0 && p.x<0);}
+void polarSort(vpt &p) { sort(p.begin(),p.end(),[](pt v,pt w) { return make_tuple(half(v),0) < make_tuple(half(w) ,cross(v,w)); }); }
+
+/// Finds a point from 'a' through 'b' with distance 'd'
+pt PointAlongLine(pt a, pt b, double d) { return a+(((b-a)/sqrt(dot(b-a,b-a)))*d); }
+

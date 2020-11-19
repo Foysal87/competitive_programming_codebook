@@ -1,0 +1,172 @@
+===>Summation of relative Prime=(n*phi(n))/2.
+===>Summation of divisors sigma(n) = multiplication of (p^(x+1)-1)/(p-1) for all p where x is the power of p.
+===>mobious function mu(n)={0,  if n has one or more repeated prime (not    square free) factors;     1   if n=1; (-1)^k   if n is a product of k distinct primes;}
+Counted using seive with initialize all with 1.
+===> Lucas Theorem: Find C(n,k)%p where p is prime and n and k are converted into base p numbers and now inidividually multiplying the digit combination.
+===>A ^ x = A ^ (x% Phi (C) + Phi (C)) (mod C) (X>=Phi(C))
+***All division is integer division  nCr(n,r) = nCr(n-1,r)+ nCr(n-1,r-1);
+n = p1e1*p2e2*p3e3*............
+==>Euler's totient phi of n = number of integers k gcd(k,n) == 1(1 to n)
+ Phi(n) = n(1-1/p1)(1-1/p2)(1-1/p3).....
+= p1(e1-1)(p1-1)*p2(e2-1)(p2-1)*p3(e3-1)(p3-1)*............
+= phi[n] – (phi[n]/p)
+///p = 2 to n, p is prime factor of n
+==>Sigma function
+sigma zero = number of divisor
+           = (e1+1)(e2+1)(e3+1).......
+sigma one = sum of divisor
+        = multiple of all p^(e+1)-1/p-1 p
+           ///p = 2 to n, p is prime factor of n
+sigma x   = sum of dx
+         ///d is the divisor of n (1 to n)
+           =  multiple of all p(e+1)*x-1/px-1
+               ///p = 2 to n, p is prime factor of n
+
+==>Catalan number:
+==>
+C[0]=1;
+C[n+1]=((2*((2*n)+1))/n+2)*C[n];
+<==
+few Catalan numbers for n = 0, 1, 2, 3, … are 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862,
+Applications :
+==>Number of possible Binary Search Trees with n keys.
+==>Number of expressions containing n pairs of parentheses which are correctly matched. For n = 3, possible expressions are ((())), ()(()), ()()(), (())(), (()()).
+==>Number of ways a convex polygon of n+2 sides can split into triangles by connecting vertices.
+==>Number of full binary trees (A rooted binary tree is full if every vertex has either two children or no children) with n+1 leaves.
+==>Number of different Unlabeled Binary Trees can be there with n nodes.
+==>The number of paths with 2n steps on a rectangular grid from bottom left, i.e., (n-1, 0) to top right (0, n-1) that do not cross above the main diagonal.
+rectangle
+==>Number of ways to insert n pairs of parentheses in a word of n+1 letters, e.g., for n=2 there are 2 ways: ((ab)c) or (a(bc)). For n=3 there are 5 ways, ((ab)(cd)), (((ab)c)d), ((a(bc))d), (a((bc)d)), (a(b(cd))).
+==>Number of noncrossing partitions of the set {1, …, 2n} in which every block is of size 2. A partition is noncrossing if and only if in its planar diagram, the blocks are disjoint (i.e. don’t cross). For example, below two are crossing and non-crossing partitions of {1, 2, 3, 4, 5, 6, 7, 8, 9}.  The partition {{1, 5, 7},  {2, 3, 8}, {4, 6}, {9}} is crossing and partition {{1, 5, 7}, {2, 3}, {4}, {6}, {8, 9}} is non-crossing.
+==>Number of Dyck words of length 2n. A Dyck word is a string consisting of n X’s and n Y’s such that no initial segment of the string has more Y’s than X’s.  For example, the following are the Dyck words of length 6: XXXYYY     XYXXYY     XYXYXY     XXYYXY     XXYXYY.
+==>Number of ways to tile a stairstep shape of height n with n rectangles. The following figure illustrates the case n = 4:
+stair
+==>Number of ways to connect the points on a circle disjoint chords.  This is similar to point 3 above.
+==>Number of ways to form a “mountain ranges” with n upstrokes and n down-strokes that all stay above the original line.The mountain range interpretation is that the mountains will never go below the horizon.Mountain_Ranges
+==>Number of stack-sortable permutations of {1, …, n}. A permutation w is called stack-sortable if S(w) = (1, …, n), where S(w) is defined recursively as follows: write w = unv where n is the largest element in w and u and v are shorter sequences, and set S(w) = S(u)S(v)n, with S being the identity for one-element sequences.
+==>Number of permutations of {1, …, n} that avoid the pattern 123 (or any of the other patterns of length 3); that is, the number of permutations with no three-term increasing subsequence. For n = 3, these permutations are 132, 213, 231, 312 and 321. For n = 4, they are 1432, 2143, 2413, 2431, 3142, 3214, 3241, 3412, 3421, 4132, 4213, 4231, 4312 and 4321
+
+===>stirling number of first kind:
+N ti jinish ke K vagee vag kora jai tai holo stirling number of second kind...
+like N=3, k=2...ABC==(AB,c),(BC,A),(AC,B)
+===>>>
+arr[n][k]=arr[n-1][k-1]+k*arr[n-1][k]..... arr[n][1]=1....arr[n][n]=1
+
+ull arr[N][N];
+ull fact(ull n)
+{
+    ull k=1;
+    for(int i=1;i<=n;i++)
+    {
+        k*=i;
+    }
+    return k;
+}
+ull rec(ull n, ull k)
+{
+    //if(n<1 || k<1 || n<k) return 1;
+    if(n<=k || n<=1) return 1;
+    if(k<=1) return fact(n-1);
+    if(arr[n][k]) return arr[n][k];
+return rec(n-1,k-1)+((n-1)*rec(n-1,k));
+===>Bell Numbers (Number of ways to Partition a Set)
+Input:  n = 3
+Output: Number of ways = 5
+Explanation: Let the set be {1, 2, 3}
+             { {1}, {2}, {3} }
+             { {1}, {2, 3} }
+             { {2}, {1, 3} }
+             { {3}, {1, 2} }
+             { {1, 2, 3} }.
+int bellNumber(int n)
+{
+   int bell[n+1][n+1];
+   bell[0][0] = 1;
+   for (int i=1; i<=n; i++)
+   {
+      // Explicitly fill for j = 0
+      bell[i][0] = bell[i-1][i-1];
+
+      // Fill for remaining values of j
+      for (int j=1; j<=i; j++)
+bell[i][j] = bell[i-1][j-1] + bell[i][j-1];
+   }
+   return bell[n][0];
+}
+===> Lucky Numbers
+Take the set of integers
+1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,……
+
+First, delete every second number, we get following reduced set.
+1,3,5,7,9,11,13,15,17,19,…………
+
+Now, delete every third number, we get
+1, 3, 7, 9, 13, 15, 19,….….
+
+Continue this process infinitely……
+1,3,7,9,13,15,19,……….
+1,3,7,13,15,19,………
+1,3,7,13,19,………
+Any number that does NOT get deleted due to above process is called “lucky”.
+bool isLucky(int n)
+{
+    static int counter = 2;
+    int next_position = n;
+    if(counter > n)
+        return 1;
+    if(n%counter == 0)
+        return 0;
+    next_position -= next_position/counter;
+    counter++;
+    return isLucky(next_position);
+}
+===>Number of Solutions to a Linear Algebraic Equation
+Suppose, we have a Linear Algebraic Equation, X1 + X2 + X3 = 5. Here the values of X1, X2 and X3 can be non-negative integers.We want to know in how many ways we can assign values to X1, X2 and X3 so that the summation is 5.
+Ans= (n+k-1)Cn
+
+===>Finding the degree of the factorial divisor
+Two numbers are given: n and k. It is required to calculate, with what degree the divisor k is included in the number n!, i.e. find the largest x such that n! is divided by k ^ x.
+
+int fact_pow (int n, int k) {
+	int res = 0;
+	while (n) {
+		n /= k;
+		res += n;
+	}
+	return res;
+}
+===>Formula For the Sum Of the First N Squares
+S = n(n+1)(2n+1)/6
+===> Geometric Series Sum:
+S = a * (r^n - 1)/(r-1)
+===> Narayana numbers:
+k =       1   2   3   4   5   6   7    8     sum of all(n,k)
+---------------------------------------------------------
+n = 1  |  1				= C1(catlan number)
+    2  |  1   1					= C2
+    3  |  1   3   1				= C3
+    4  |  1   6   6   1		 	= C4
+    5  |  1  10  20  10   1			= C5
+    6  |  1  15  50  50  15   1		= C6
+    7  |  1  21 105 175 105  21   1           = C7
+    8  |  1  28 196 490 490 196  28   1  	= C8
+Use :
+1.	An example of a counting problem whose solution can be given in terms of the Narayana numbers N(n, k), is the number of expressions containing n pairs of parentheses, which are correctly matched and which contain k distinct nestings. For instance, N(4, 2) = 6 as with four pairs of parentheses six sequences can be created which each contain two times the sub-pattern '()':  ()((()))  (())(())  (()(()))  ((()()))  ((())())  ((()))()
+2.	the Narayana numbers also count the number of paths from (0, 0) to (2n, 0), with steps only northeast and southeast, not straying below the x-axis, with k peaks.
+
+
+===>Delannoy number:
+a Delannoy number {\displaystyle D}D describes the number of paths from the southwest corner (0, 0) of a rectangular grid to the northeast corner (m, n), using only single steps north, northeast, or east.
+D(m,n) = (mCk) * (nCk) * 2^k     [k=0 to min(n,m)]
+
+===>Motzkin number:
+some numbers :  1, 1, 2, 4, 9, 21, 51, 127, 323, 835, 2188, 5798,........
+Mn = (((2n+1)/(n+2))*M(n-1)) +(((3n-3)/(n+2))*M(n-2))
+Use :
+the nth Motzkin number is the number of different ways of drawing non-intersecting chords between n points on a circle (not necessarily touching every point by a chord)
+The Motzkin number for n is also the number of positive integer sequences of length n − 1 in which the opening and ending elements are either 1 or 2, and the difference between any two consecutive elements is −1, 0 or 1.
+Equivalently, the Motzkin number for n is the number of positive integer sequences of length n + 1 in which the opening and ending elements are 1, and the difference between any two consecutive elements is −1, 0 or 1.
+===> Derangement:
+ A derangement is a permutation of the elements of
+a set, such that no element appears in itts orginal position.
+D(n)= (n-1) * (D(n-1) + D(n-2)) where D(0) = 1, D(1) = 0

@@ -1,0 +1,62 @@
+
+ll dp[N],arr[N],low[N],dfn[N],vis[N];
+int cnt,df;
+vi edge[N];
+void articulation(int i,int p)
+{
+    vis[i]=1;
+    int res=0;
+    low[i]=dfn[i]=++df;
+    for(int j=0;j<edge[i].size();j++)
+    {
+        int k=edge[i][j];
+        if(!vis[k])
+        {
+            res++;
+            articulation(k,i);
+            low[i]=min(low[i],low[k]);
+            if(p==-1 && res==2) dp[i]=1;
+            if(p!=-1 && low[k]>=dfn[i]) dp[i]++;
+        }
+        else if(i!=k)
+        {
+            low[i]=min(low[i],dfn[k]);
+        }
+    }
+}
+int main()
+{
+    int t;
+    in(t);
+    for(int tt=1;tt<=t;tt++)
+    {
+        for(int i=0;i<N;i++) edge[i].clear();
+        mem(low,0);
+        mem(dfn,0);
+        mem(vis,0);
+        mem(dp,0);
+        int n,m,a,b;
+        in2(n,m);
+        for(int i=0;i<m;i++)
+        {
+            in2(a,b);
+            edge[a].pb(b);
+            edge[b].pb(a);
+        }
+        df=0,cnt=0;
+        for(int i=1;i<=n;i++)
+        {
+            if(!vis[i])
+            {
+                articulation(i,-1);
+            }
+        }
+        for(int i=1;i<=n;i++)
+        {
+           if(dp[i]) cnt++;
+        }
+        pcs(tt);
+        pr(cnt);
+    }
+    return 0;
+}

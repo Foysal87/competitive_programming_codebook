@@ -1,0 +1,15 @@
+bool inDisk(pt a,pt b,pt p){ return dot(a-p,b-p)<=0; }                              ///A point P lies on disk of Diameter [AB] ||| P, AB segment er uporer othoba nicher kno ekta bindu
+bool onSegment(pt a,pt b,pt p) { return orient(a,b,p) && inDisk(a,b,p) ;}           ///A point P lies in segment
+
+/// segment segment interSection
+bool SegSegInter(pt a,pt b,pt c,pt d,pt &out){
+double oa=orient(c,d,a),ob=orient(c,d,b),oc=orient(a,b,c),od=orient(a,b,d);
+if(oa*ob<0 && oc*od<0){
+    out=(a*ob - b*oa)/(ob-oa);
+    return true;  } return false; }
+
+/// Segment to Point distance
+double segPoint(pt a,pt b,pt p){ if(a!=b) {line l(a,b) ; if(l.cmpProj(a,p) && l.cmpProj(p,b)) return l.distLineToPoint(p); } return min(abs(p-a),abs(p-b)); }
+
+///segment segment distance
+double SegSegDist(pt a,pt b,pt c,pt d){ pt dum; if(SegSegInter(a,b,c,d,dum)) return 0; return min({segPoint(a,b,c),segPoint(a,b,d),segPoint(c,d,a),segPoint(c,d,b)});}

@@ -1,0 +1,78 @@
+int bit[N],n;
+void update(int i,int val)
+{
+	while(i<=n)
+	{
+		bit[i]=max(bit[i],val);
+		i=i+(i&(-i));
+	}
+}
+int query(int i)
+{
+	int ret=0;
+	while(i)
+	{
+		ret=max(ret,bit[i]);
+		i=i-(i&(-i));
+	}
+	return ret;
+}
+vi v[N];
+int last[N],maxx[N],a[N];
+int Out[N];
+vector<pii> Q[N];
+
+void update_DAG(int cur,int val)
+{
+	if(val>maxx[cur])
+	{
+		for(auto x:v[cur])
+			update_DAG(x,val+1);
+		maxx[cur]=val;
+		update(cur,val);
+	}
+}
+
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		int q,i,j;
+		cin>>n>>q;
+		for(i=0;i<=n;i++)
+		{
+			maxx[i]=last[i]=bit[i]=0;
+			v[i].clear();
+			Q[i].clear();
+		}
+		for(i=1;i<=n;i++)
+		{
+		cin>>a[i];
+			last[a[i]]=i;
+			int prev=0;
+			for(j=a[i]-1;j>=1;--j)
+				if(last[j]>prev)
+				{
+					prev=last[j];
+					v[last[j]].PB(i);
+				}
+		}
+		for(i=0;i<q;i++)
+		{
+			int x,y;
+			cin>>x>>y;
+			Q[x].PB(MP(y,i));
+		}
+		for(i=n;i>=1;--i)
+		{
+			update_DAG(i,1);
+			for(j=0;j<Q[i].size();j++)
+				Out[Q[i][j].S]=query(Q[i][j].F);
+		}
+		for(i=0;i<q;i++)
+			cout<<Out[i]<<endl;
+	}
+}

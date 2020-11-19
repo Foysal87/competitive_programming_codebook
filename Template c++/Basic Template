@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define pii             pair<int , int >
+#define piil            pair<ll , ll >
+#define vi              vector<int >
+#define vil             vector<ll >
+#define pb              push_back
+#define fi              first
+#define sc              second
+#define mem(a, b)       memset((a), (b), sizeof(a))
+#define PI              acos(-1.0)
+#define all(v)          (v.begin(),v.end())
+#define unq(v)          v.erase(unique(all(v)),v.end())
+#define ll              long long
+#define ull             unsigned long long
+#define fbo             find_by_order
+#define ook             order_of_key
+#define mod             1000000007
+#define __              std::ios_base::sync_with_stdio (false); cin.tie(0); cout.tie(0);
+#define g_h gp_hash_table<ll, ll>
+ll gcd(ll a, ll b){if(b==0) {return a;}return gcd(b, a % b);}
+ll BigMod(ll B,ll P,ll M){     ll R=1; while(P>0)      {if(P%2==1){R=(R*B)%M;}P/=2;B=(B*B)%M;} return R;}
+//______________________________________________________________________________________________________________________________________________________
+const int N   = 500050;
+const ll inf  = 2e18;
+
+ll dp[N],arr[N],arr2[N];
+char str[N];
+int main()
+{
+    __;
+    ll n,m,k,a,b,t;
+    ll sum=0;
+    string s;
+
+
+    return 0;
+}

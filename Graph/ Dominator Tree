@@ -1,0 +1,75 @@
+// note: Here root is 1
+// dominator tree gives root to all vertices there is no edges came double times
+// there is no cycle
+const int maxn = 200900;
+vector<int> graph[maxn];
+vector<int> tree[maxn], rg[maxn], bucket[maxn];
+int sdom[maxn], par[maxn], dom[maxn], dsu[maxn], label[maxn];
+int arr[maxn], rev[maxn], T ;
+void dini(int node)
+{
+    T = 0;
+    for (int i = 0; i <= node ; i++)
+    {
+        sdom[i] = par[i] = dom[i] = dsu[i] = label[i] = 0;
+        arr[i] = rev[i] = 0;
+        graph[i].clear();
+        tree[i].clear();
+        rg[i].clear();
+        bucket[i].clear();
+    }
+}
+int Find(int u, int x = 0)
+{
+    if (u == dsu[u])         return x ? -1 : u;
+    int v = Find(dsu[u], x + 1);
+    if (v < 0)         return u;
+    if (sdom[label[dsu[u]]] < sdom[label[u]])         label[u] = label[dsu[u]];
+    dsu[u] = v;
+    return x ? v : label[u];
+}
+void Union(int u, int v)   //Add an edge u-->v
+{
+    dsu[v] = u;
+}
+void dfs0(int u)
+{
+    T++;
+    arr[u] = T;
+    rev[T] = u;
+    label[T] = T;
+    sdom[T] = T;
+    dsu[T] = T;
+    for (int i = 0; i < graph[u].size() ; i++)
+    {
+        int w = graph[u][i];
+        if (!arr[w])             dfs0(w), par[arr[w]] = arr[u];
+        rg[arr[w]].push_back(arr[u]);
+    }
+}
+void BuildTree()
+{
+    //Build Dominator tree
+    dfs0(1);
+    int n = T;
+    for (int i = n; i >= 1; i--)
+    {
+        for (int j = 0; j < rg[i].size() ; j++)             sdom[i] = min(sdom[i], sdom[Find(rg[i][j])]);
+        if (i > 1)             bucket[sdom[i]].push_back(i);
+        for (int j = 0; j < bucket[i].size() ; j++)
+        {
+            int w = bucket[i][j];
+            int v = Find(w);
+            if (sdom[v] == sdom[w])                 dom[w] = sdom[w];
+            else
+                dom[w] = v;
+        }
+        if (i > 1)             Union(par[i], i);
+    }
+    for (int i = 2; i <= n; i++)
+    {
+        if (dom[i] != sdom[i])             dom[i] = dom[dom[i]];
+        tree[rev[i]].push_back(rev[dom[i]]);
+        tree[rev[dom[i]]].push_back(rev[i]);
+    }
+}

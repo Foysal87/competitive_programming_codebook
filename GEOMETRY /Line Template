@@ -1,0 +1,60 @@
+struct line{
+pt v; T c,a,b;                                                                      /// v is the direction vector and c is the position
+line () {}
+line (pt v, T c) : v(v) , c(c) ,a(-v.y),b(v.x) {}                                   /// from direction vector V and offset c
+line (T p, T q, T c) : v({q,-p}) , c(c), a(p) ,b (q) {}                             /// from ax+by=c
+line (pt p, pt q) : v(q-p) ,c(cross(v,p)), a(-v.y) , b(v.x) {}                      /// from point p and q
+line scan(){cin>>a>>b>>c ; v={b,-a}; c=-c; }
+T side(pt p) {return cross(v,p)-c;}                                                 /// point p which side of line : if positive then it will be pos. side
+T distLineToPoint(pt p) { return abs(side(p))/ abs(v) ;}                            /// point p to line distance
+T sqdist(pt p) { return side(p)*side(p)/(double)sq(v); }                            /// for checking a point within a certain integer distance
+void sortAlongLine(vpt &p) { sort(p.begin(),p.end(),[&](pt p,pt q) { return dot(v,p) < dot(v,q); }); }      /// sorting along a line
+line translate(pt t) { return {v,c+cross(v,t)}; }                                   /// move a line on T direction
+line shiftLeft(T dist) { return {v,c+dist*abs(v)} ;}                                /// move a line in left with D distance
+pt proj(pt p) { return p-RotateCCW90(v)*side(p)/sq(v); }                            /// The orthogonal projection of a point P on a line l
+pt refl(pt p) { return p-RotateCCW90(v)*2*side(p)/sq(v); }                          /// orthogonal reflection of a point.
+bool cmpProj(pt p,pt q){ return dot(v,p) < dot(v,q) ;}                              ///order of two points. kontar age konta ashche
+};
+ostream& operator<<(ostream& os,line p){return os<<""<<p.a<<" "<<p.b<<" "<<p.c<< "";}
+
+///Line Line intersector point
+bool LineLineInter(line l1,line l2, pt &out){ T d=cross(l1.v,l2.v);  if(d==0) return false; out=(l2.v*l1.c -l1.v*l2.c)/d ; return true;}
+
+/// angle bisectors
+line bisector(line l1,line l2,bool interior) { assert(cross(l1.v,l2.v)!=0); double sign=interior ? 1 : -1; return {l2.v/abs(l2.v) + l1.v/abs(l1.v)*sign , l2.c/abs(l2.v) + l1.c/abs(l1.v)*sign }; }
+
+/// ray to point distance {(A vector to B vector)=ray}
+T RayToPointDist(pt b, pt c,pt a){ line x=line(b,c); double ans=x.distLineToPoint(a); double ang=angle3Vector(b,a,c); if((pi/2.0)-ang>-EPS) return ans; else return dist(a,b); }
+
+///shortest distance ray to ray
+double rayToRayDist(pt a,pt b,pt c,pt d){
+    line x(a,b);
+    line y(c,d);
+    pt o;
+    bool g=LineLineInter(x,y,o);
+    if(g && x.distLineToPoint(o)<=EPS && (!x.cmpProj(o,a) || !x.cmpProj(o,b)) && (!y.cmpProj(o,c) || !y.cmpProj(o,d)) && y.distLineToPoint(o)<=EPS) return 0;
+    return min(RayToPointDist(a,b,c),RayToPointDist(c,d,a));
+}
+
+/// Determines whether the lines from 'a' to 'b' and 'c' to 'd' are parallel or not
+bool LinesParallel(pt a, pt b, pt c, pt d) { return fabs(cross(b-a, c-d))<EPS; }
+
+/// Determines if the lines from 'a' to 'b' and 'c' to 'd' are collinear or not
+bool LinesCollinear(pt a, pt b, pt c, pt d) { return LinesParallel(a, b, c, d) && fabs(cross(a-b, a-c))<EPS && fabs(cross(c-d, c-a))<EPS; }
+
+31.  Segment
+bool inDisk(pt a,pt b,pt p){ return dot(a-p,b-p)<=0; }                              ///A point P lies on disk of Diameter [AB] ||| P, AB segment er uporer othoba nicher kno ekta bindu
+bool onSegment(pt a,pt b,pt p) { return orient(a,b,p) && inDisk(a,b,p) ;}           ///A point P lies in segment
+
+/// segment segment interSection
+bool SegSegInter(pt a,pt b,pt c,pt d,pt &out){
+double oa=orient(c,d,a),ob=orient(c,d,b),oc=orient(a,b,c),od=orient(a,b,d);
+if(oa*ob<0 && oc*od<0){
+    out=(a*ob - b*oa)/(ob-oa);
+    return true;  } return false; }
+
+/// Segment to Point distance
+double segPoint(pt a,pt b,pt p){ if(a!=b) {line l(a,b) ; if(l.cmpProj(a,p) && l.cmpProj(p,b)) return l.distLineToPoint(p); } return min(abs(p-a),abs(p-b)); }
+
+///segment segment distance
+double SegSegDist(pt a,pt b,pt c,pt d){ pt dum; if(SegSegInter(a,b,c,d,dum)) return 0; return min({segPoint(a,b,c),segPoint(a,b,d),segPoint(c,d,a),segPoint(c,d,b)});}

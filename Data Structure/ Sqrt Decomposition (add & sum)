@@ -1,0 +1,66 @@
+const int MAXN = 1e5 + 5e1;
+const int BSZ = 200;
+const int MAXB = (MAXN + BSZ - 1) / BSZ + 1;
+int a[MAXN], sum[MAXB], bucval[MAXB];
+int getBucket( int i) {
+    return i / BSZ;
+}
+int getStart( int i) {
+    return getBucket( i) * BSZ;
+}
+int getEnd( int i, int n) {
+    return min( getStart( i) + BSZ, n);
+}
+int main() {
+    int n;
+    cin >> n;
+    for ( int i = 0; i < n; i++)
+	cin >> a[ i];
+    int q;
+    cin >> q;
+    cerr << q << endl;
+    int l, r, x;
+    char c;
+    while ( q --) {
+	cin >> c >> l >> r;
+
+	if ( c == '+') {
+	    cin >> x;
+	    if ( getBucket( l) == getBucket( r)) {
+		sum[ getBucket( l)] += ( r - l) * x;
+		for (int i = l; i < r; i ++)
+		    a[ i] += x;
+	    }
+	    else {
+		for ( int i = l; i < getEnd( l, n); i ++) {
+		    sum[ getBucket( i)] += x;
+		    a[ i] += x;
+		}
+		for ( int i = getBucket( l) + 1; i < getBucket( r - 1); i ++) {
+		    bucval[ i] += x;
+		    sum[ i] += x * BSZ;
+		}
+		for ( int i = getStart( r - 1); i < r; i ++) {
+		    sum[ getBucket( i)] += x;
+		    a[ i] += x;
+		}
+	    }
+	}
+	if ( c == '?') {
+	    int res = 0;
+	    if ( getBucket( l) == getBucket( r - 1)) {
+		for ( int i = l; i < r; i ++)
+		    res += a[ i] + bucval[ getBucket( i)];
+	    }
+	    else {
+		for ( int i = l; i < getEnd( l, n); i ++)
+		    res += a[ i] + bucval[ getBucket( i)];
+		for ( int i = getBucket( l) + 1; i < getBucket( r - 1); i ++)
+		    res += sum[i];
+		for (int i = getStart(r-1); i < r; i ++)
+		    res += a[i] + bucval[ getBucket( i)];
+	    }
+	    cout << res << endl;
+	}
+    }
+}

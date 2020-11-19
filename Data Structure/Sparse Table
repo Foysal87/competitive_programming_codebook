@@ -1,0 +1,14 @@
+int sp[N][24],lg2[N];
+void init(int n)
+{
+lg2[1]=0;
+for(int i=2;i<N;i++) lg2[i]=lg2[i/2]+1;
+for(int i=1;i<=n;i++) sp[i][0]=arr[i];
+for(int j=1;j<=23;j++) for(int i=1;i+(1<<(j-1))<=n;i++) sp[i][j]=max(sp[i][j- 1],sp[i+(1<<(j-1))][j-1]);
+}
+int get(int l,int r)
+{
+    int k=lg2[r-l+1];
+    int ans=max(sp[l][k],sp[r-(1<<k)+1][k]);
+    return ans;
+}

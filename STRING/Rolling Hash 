@@ -1,0 +1,79 @@
+const int MOD1=127657753,MOD2=987654319;
+const int p1=137,p2=277;
+int invp1,invp2;
+pii pw[N],invpw[N];
+void pre()
+{
+    pw[0]= {1,1};
+    for(int i=1; i<N; i++)
+    {
+        pw[i].fi=1LL*pw[i-1].fi*p1%MOD1;
+        pw[i].sc=1LL*pw[i-1].sc*p2%MOD2;
+    }
+    invp1=BigMod(p1,MOD1-2,MOD1);
+    invp2=BigMod(p2,MOD2-2,MOD2);
+    invpw[0]= {1,1};
+    for(int i=1; i<N; i++)
+    {
+        invpw[i].fi=1LL*invpw[i-1].fi*invp1%MOD1;
+        invpw[i].sc=1LL*invpw[i-1].sc*invp2%MOD2;
+    }
+}
+///returns hash of string s
+pii get_hash(string s)
+{
+    int n=s.size();
+    pii ans= {0,0};
+    for(int i=0; i<n; i++)
+    {
+        ans.fi=(ans.fi+1LL*pw[i].fi*s[i]%MOD1)%MOD1;
+        ans.sc=(ans.sc+1LL*pw[i].sc*s[i]%MOD2)%MOD2;
+    }
+    return ans;
+}
+struct RollingHash
+{
+    int n;
+    string s;///0-indexed
+    vector<pii>hs;///1-indexed
+    void init(string _s)
+    {
+        n=_s.size();
+        s=_s;
+        hs.pb({0,0});
+        for(int i=0; i<n; i++)
+        {
+            pii p;
+            p.fi=(hs[i].fi+1LL*pw[i].fi*s[i]%MOD1)%MOD1;
+            p.sc=(hs[i].sc+1LL*pw[i].sc*s[i]%MOD2)%MOD2;
+            hs.pb(p);
+        }
+    }
+///returns hash of substring [l....r],1-indexed
+    pii get_hash(int l,int r)
+    {
+        pii ans;
+        ans.fi=(hs[r].fi-hs[l-1].fi+MOD1)%MOD1*1LL*invpw[l- 1].fi%MOD1;
+        ans.sc=(hs[r].sc-hs[l-1].sc+MOD2)%MOD2*1LL*invpw[l- 1].sc%MOD2;
+        return ans;
+    }
+///returns hash of total string
+    pii get()
+    {
+        return get_hash(1,n);
+    }
+};
+RollingHash h;
+int main()
+{
+    __;
+   pre();
+   ll n,m,k,a,b,t;
+ ll sum=0;
+ string s;
+ cin>>s;
+ h.init(s);
+ pii ans=h.get();
+ cout<<ans.fi<<" "<<ans.sc<<endl;
+return 0;
+}

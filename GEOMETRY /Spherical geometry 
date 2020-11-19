@@ -1,0 +1,101 @@
+/// We use an angle ϕ, the latitude, which tells us how far North the point is (or South, if ϕ < 0), and
+///an angle λ, the longitude, which tells us how far East the point is (or West, if λ < 0).
+///(rcosϕcosλ,rcosϕsinλ,rsinϕ)
+/// The function below ﬁnds the position given angles in degrees
+p3 sph(double r, double lat, double lon)
+{
+    lat *= pi/180, lon *= pi/180;
+    return {r*cos(lat)*cos(lon), r*cos(lat)*sin(lon), r*sin(lat)};
+}
+
+/// Sphere-line intersection
+int sphereLine(p3 o, double r, line3d l, pair<p3,p3> &out)
+{
+    double h2 = r*r - l.sqDist(o);
+    if (h2 < 0) return 0; // the line doesn’t touch the sphere
+    p3 p = l.proj(o);
+    p3 h = l.d*sqrt(h2)/abs(l.d); // vector parallel to l, of length h
+    out = {p-h, p+h};
+    return 1 + (h2 > 0);
+}
+
+///The shortest distance between two points A and B on a sphere (O,r)
+double greatCircleDist(p3 o, double r, p3 a, p3 b) { return r * angle(a-o, b-o); }
+
+///Spherical segment intersection
+/// segment [AB] A and B is point on spherical
+bool validSegment(p3 a, p3 b)
+{
+    return a*b != zero || (a|b) > 0;    /// is this a valid segment?
+}
+bool properInter(p3 a, p3 b, p3 c, p3 d, p3 &out)
+{
+    p3 ab = a*b, cd = c*d; // normals of planes OAB and OCD
+    int oa = sgn(cd|a),
+    ob = sgn(cd|b), oc = sgn(ab|c), od = sgn(ab|d);
+    out = ab*cd*od; // four multiplications => careful with overflow !
+    return (oa != ob && oc != od && oa != oc);
+}
+
+///Spherical segment intersection
+/// segment [AB] A and B is point on spherical
+bool validSegment(p3 a, p3 b)
+{
+    return a*b != zero || (a|b) > 0;    /// is this a valid segment?
+}
+bool properInter(p3 a, p3 b, p3 c, p3 d, p3 &out)
+{
+    p3 ab = a*b, cd = c*d; // normals of planes OAB and OCD
+    int oa = sgn(cd|a), ob = sgn(cd|b), oc = sgn(ab|c), od = sgn(ab|d);
+    out = ab*cd*od; // four multiplications => careful with overflow !
+    return (oa != ob && oc != od && oa != oc);
+}
+/// inproper intersection
+bool onSphSegment(p3 a, p3 b, p3 p)
+{
+    p3 n = a*b;
+    if (n == zero) return a*p == zero && (a|p) > 0;
+    return (n|p) == 0 && (n|a*p) >= 0 && (n|b*p) <= 0;
+}
+
+struct directionSet : vector<p3>
+{
+    using vector::vector; // import constructors
+    void insert(p3 p)
+    {
+        for (p3 q : *this) if (p*q == zero) return;
+        push_back(p);
+    }
+};
+directionSet intersSph(p3 a, p3 b, p3 c, p3 d)
+{
+    assert(validSegment(a, b) && validSegment(c, d));
+    p3 out;
+    if (properInter(a, b, c, d, out)) return {out};
+    directionSet s;
+    if (onSphSegment(c, d, a)) s.insert(a);
+    if (onSphSegment(c, d, b)) s.insert(b);
+    if (onSphSegment(a, b, c)) s.insert(c);
+    if (onSphSegment(a, b, d)) s.insert(d);
+    return s;
+}
+
+/// angle in spherical
+double angleSph(p3 a, p3 b, p3 c)
+{
+    return angle(a*b, a*c);
+}
+double orientedAngleSph(p3 a, p3 b, p3 c)
+{
+    if ((a*b|c) >= 0) return angleSph(a, b, c);
+    else return 2*pi - angleSph(a, b, c);
+}
+
+/// polygon area in spherical
+double areaOnSphere(double r, vector<p3> p)
+{
+    int n = p.size();
+    double sum = -(n-2)*M_PI;
+    for (int i = 0; i < n; i++) sum += orientedAngleSph(p[(i+1)%n], p[(i+2)%n], p[i]);
+    return r*r*sum;
+}
