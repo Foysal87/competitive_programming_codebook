@@ -1,4 +1,4 @@
-# competitive_programming_notebook
+# competitive_programming_codebook
 
 
 **This is a Codebook for programming. All types of Advanced Algothims and data structures are stored here**
