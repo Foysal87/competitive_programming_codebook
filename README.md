@@ -1,7 +1,7 @@
 # competitive_programming_codebook
 
 
-**This is a Codebook for programming. All types of Advanced Algothims and data structures are stored here**
+**This is a Codebook for programming. I try to store some Advanced Algothims and data structures here**
 
 **Some algorithms will add later**
 
