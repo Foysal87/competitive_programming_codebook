@@ -3,7 +3,7 @@
 
 **This is a Codebook for programming. I try to store some Advanced Algothims and data structures here**
 
-**Some algorithms will add later**
+**Some algorithms will  be added later**
 
 **You can fork it and add more**
 
@@ -64,14 +64,14 @@
 
 ## GEOMETRY 
 * Convex hull___NlogN
-* Deleting points from Convex Hull ___(nlogn*q) 
+* Deleting points from Convex Hull___(nlogn*q) 
 * Finding the area of ​​the union of triangles 
 * Constructing a convex hull by Graham bypass___Nlogn
 * 3D geometry Template
 * 3D Plane template
 * Check point for belonging to a convex polygon 
 * Circle Template
-* Dynamic Convex hull ___Adding Points to an Existing Convex Hull__complexity o(n*q) 
+* Dynamic Convex hull___Adding Points to an Existing Convex Hull__complexity o(n*q) 
 * Finding the largest inscribed circle in a convex polygon using a ternary search 
 * Line Template
 * Line 3D Template
