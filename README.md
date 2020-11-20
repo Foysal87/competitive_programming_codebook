@@ -10,7 +10,7 @@
 
 
 
-##Template c++
+## Template c++
 * Basic Template
 * Super Template
 ## Numer Theory
@@ -38,7 +38,7 @@
 
 
 
-##Graph
+## Graph
 * Dominator Tree
 * dynamic connectivity problem
 * MaxFlowMinCut(SPFA)
@@ -62,7 +62,7 @@
 * Strongly Connected Component
 
 
-##GEOMETRY 
+## GEOMETRY 
 * Convex hull___NlogN
 * Deleting points from Convex Hull ___(nlogn*q) 
 * Finding the area of ​​the union of triangles 
@@ -84,7 +84,7 @@
 
 
 
-##Data Structure
+## Data Structure
 * Dsu on Tree
 * Fenwick Tree
 * Merge Sort Tree
@@ -112,7 +112,7 @@
 * wavelet tree 
 
 
-##STRING
+## STRING
 * 2D hashing
 * Aho corasick 
 * KMP
@@ -122,7 +122,7 @@
 * Suffix Automaton
 
 
-##XOR ___ GCD___LCM
+## XOR ___ GCD___LCM
 * basis vector <everything for xor subset>
 * All pair GCD
 * All pair GCD(II)
@@ -131,17 +131,11 @@
 * maximum pair lcm in an array 
 
 
-##Others
+## Others
 * BigInt with fft(add,mult,div)___nlogn__10^5 length Number
 * JAVA BigInteger
 * MatExpo
 * Number Theory Notes
 * Random Genarator
-
-**This is a Codebook for programming. All types of Advanced Algothims and data structures are stored here**
-
-**Some algorithms will add later**
-
-**You can fork it and add more**
 
 
