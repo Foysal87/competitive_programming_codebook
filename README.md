@@ -13,7 +13,7 @@
 ## Template c++
 * Basic Template
 * Super Template
-## Numer Theory
+## Number Theory
 * PRIME TEST(miller_robin) 
 * NUMBER OF PRIME FACTOR(SQUFOF)  Faster (10^18)
 * Expression solving
