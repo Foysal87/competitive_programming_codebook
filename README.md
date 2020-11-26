@@ -1,9 +1,7 @@
 [Codebook for programming](https://github.com/Foysal87/competitive_programming_codebook)
-**I try to store some Advanced Algorithms and data structures here. Of course, everything here is implemented in GitHub**
+**I try to store some Advanced Algorithms and data structures here. Of course, everything here is implemented Here**
 
 **I try to explain the algorithm in the code**
-
-**You can fork it and add more**
 
 ## Template c++
 * Basic Template
